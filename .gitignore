@@ -7,6 +7,17 @@
 *.userosscache
 *.sln.docstates
 
+MCA/mca.dal/bin
+MCA/mca.dal/obj
+MCA/mca.model/bin
+MCA/mca.model/obj
+MCA/mca.providex/bin
+MCA/mca.providex/obj
+MCA/mca.utility/bin
+MCA/mca.utility/obj
+MCA/mca.web/bin
+MCA/mca.web/obj
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
