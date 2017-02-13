@@ -1,0 +1,75 @@
+﻿
+@{
+    ViewBag.Title = "Product Search";
+}
+
+@section Styles
+{    
+    <style type="text/css">
+    </style>
+}
+
+<div class="container">
+    <div class="row">
+        <div class="page-heading">
+            <img class="img-responsive" src="~/Images/search-icon-small.png" alt="search-icon-small">
+            <h1>Product Search</h1>
+        </div>
+        <div class="breadcrumb-nav">
+            <ol class="breadcrumb">
+                <li><a href="#">Home</a></li>
+                <li class="active"><a href="#">Product Search</a></li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm("Detail", "Products", FormMethod.Get))
+{
+    <div class="container container-bg page-height">
+        <div class="row">
+            <div class="product-search-content">
+                <h2>
+                    Please input the Product Name/Model Number in the Search Box
+                    below and click on "Submit"
+                </h2>
+                <div class="search-input">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Product Name/Model Number" name="productName" id="productName">
+                        <input type="hidden" name="productID" id="productID">
+                    </div>
+                    <div class="button"> <button type="submit" class="button">Submit</button> </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts
+{    
+    <script type="text/javascript" language="javascript">
+        $("#productName").autocomplete({
+            minlength: 3,
+            source: function (request, response) {
+                $.ajax({
+                    url: '@Url.Action("Autocomplete","Products")',
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return {
+                                label: item.Name,
+                                value: item.Name,
+                                id: item.Id
+                            };
+                        }))
+                    }
+                })
+            },
+            select: function (event, ui) {
+                $("#productID").val(ui.item.id);
+            },
+        });
+    </script>
+}

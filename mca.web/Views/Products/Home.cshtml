@@ -1,0 +1,77 @@
+﻿
+@{
+    ViewBag.Title = "Home";
+}
+
+@section Styles
+{
+    <style type="text/css">
+    </style>
+}
+
+<div class="container">
+    <div class="row">
+        <div class="page-heading">
+            <i class="fa fa-home" aria-hidden="true"></i>
+            <h1>HOME</h1>
+        </div>
+        <div class="breadcrumb-nav">
+            <ol class="breadcrumb">
+                <li class="active">Home</li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+<div class="container container-bg">
+    <div class="row">
+        <div class="body-content">
+            <h2>
+                Welcome!  Please click on the "Search by Product Name/Model Number" button or the
+                "Product Selector" button below to view information related to the Product Name/Model Number.
+            </h2>
+            <div class="row">
+                <div class="col-md-4 col-sm-4 col-xs-8 col-md-offset-4 col-sm-offset-4 col-xs-offset-2">
+                    <div class="boxed">
+                        <a href="@Url.Action("Search","Products")" target="_blank">
+                            <div class="box-icons"> <img class="img-responsive" src="~/Images/product-name-icon.png"> </div>
+                            <div class="box-text">
+                                <h2>
+                                    Product Name / Model
+                                    Number
+                                </h2>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="line">
+                <hr>
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-sm-4 col-xs-8 col-md-offset-4 col-sm-offset-4 col-xs-offset-2">
+                    <div class="boxed">
+                        <a href="@Url.Action("Selector","Products")" target="_blank">
+                            <div class="box-icons"> <img class="img-responsive" src="~/Images/product-selector-icon.png"> </div>
+                            <div class="box-text">
+                                <h2>
+                                    Product<br>
+                                    Selector
+                                </h2>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript" lang="en">
+        $(function () {
+            console.log('hello world');
+        });
+    </script>
+}
