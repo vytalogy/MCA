@@ -197,9 +197,12 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
+    <Compile Include="Filter\AuthorizeAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\Auth.cs" />
+    <Compile Include="Helpers\HelperMethods.cs" />
     <Compile Include="Models\UsersModel\UsersViewModel.cs" />
     <Compile Include="Models\ProductModel\ProductViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

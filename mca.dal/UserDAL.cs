@@ -103,8 +103,7 @@ namespace mca.dal
         public mca.model.User Get(String UID, String PWD)
         {
             mca.model.User _User = null;
-            SqlConnection conn = null;
-            SqlDataReader reader;
+            SqlConnection conn = null;            
             try
             {
                 conn = new System.Data.SqlClient.SqlConnection(this.conn);

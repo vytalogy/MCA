@@ -8,6 +8,7 @@ using mca.providex;
 
 namespace mca.web.Controllers
 {
+    [Restricted]
     public class ProductsController : Controller
     {
         [HttpGet]
