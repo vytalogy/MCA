@@ -21,59 +21,26 @@ namespace mca.providex
 
         }
 
-        public List<CustomListItem> GetItemList(string CI_Item)
+        public List<CustomListItem> GetItemByFilter(string filter, ProductEnums value)
         {
+            string sql = string.Empty;
             List<CustomListItem> List = new List<CustomListItem> { };
             SqlConnection conn = null;
             SqlDataReader reader;
             try
             {
-                string sql = "select  * from  CI_Item where itemcode like'" + CI_Item + "%'";
+                if (value == ProductEnums.SearchByItemCode)
+                    sql = "select ItemCode,ItemCodeDesc from CI_Item where itemcode like'" + filter + "%' or ItemCodeDesc like'%" + filter + "%'";
+                else if (value == ProductEnums.SearchByItemCodeDesc)
+                    sql = "select ItemCode,ItemCodeDesc from CI_Item where ItemCodeDesc like'%" + filter + "%'";
+
                 conn = new System.Data.SqlClient.SqlConnection(this.conn);
                 conn.Open();
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    List.Add(new CustomListItem { Value = reader.GetValue(0).ToString(), Text = reader.GetValue(2).ToString() });
-                }
-                reader.Close();
-                cmd.Dispose();
-                conn.Close();
-
-            }
-            catch (SqlException ex)
-            {
-                // DAL.Utilities.SaveException(ex);
-            }
-            catch (Exception ex)
-            {
-                //DAL.Utilities.SaveException(ex);
-            }
-            finally
-            {
-                if (conn.State == ConnectionState.Open)
-                    conn.Close();
-                conn = null;
-            }
-            return List;
-        }
-
-        public List<CustomListItem> GetItemByFilter(string filter)
-        {
-            List<CustomListItem> List = new List<CustomListItem> { };
-            SqlConnection conn = null;
-            SqlDataReader reader;
-            try
-            {
-                string sql = "select  * from  CI_Item where ItemCodeDesc like'%" + filter + "%'";
-                conn = new System.Data.SqlClient.SqlConnection(this.conn);
-                conn.Open();
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    List.Add(new CustomListItem { Value = reader.GetValue(0).ToString(), Text = reader.GetValue(2).ToString() });
+                    List.Add(new CustomListItem { Value = reader.GetValue(0).ToString(), Text = reader.GetValue(1).ToString() });
                 }
                 reader.Close();
                 cmd.Dispose();

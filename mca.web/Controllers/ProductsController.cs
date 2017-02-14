@@ -55,7 +55,7 @@ namespace mca.web.Controllers
                 return null;
 
             ProductDAL _product = new ProductDAL { };
-            var EmpDet = _product.GetItemList(Prefix).Select(s => new { Name = s.Text, Id = s.Value });
+            var EmpDet = _product.GetItemByFilter(Prefix, ProductEnums.SearchByItemCode).Select(s => new { Name = s.Text, Id = s.Value });
             return Json(EmpDet, JsonRequestBehavior.AllowGet);
         }
 
@@ -64,7 +64,7 @@ namespace mca.web.Controllers
         {
             ViewBag.Header = Header;
             ProductDAL _product = new ProductDAL();
-            var EmpDet = _product.GetItemByFilter(filter).Select(s => new SelectListItem { Text = s.Text, Value = s.Value });
+            var EmpDet = _product.GetItemByFilter(filter, ProductEnums.SearchByItemCodeDesc).Select(s => new SelectListItem { Text = s.Text, Value = s.Value });
             return PartialView(EmpDet);
         }
     }

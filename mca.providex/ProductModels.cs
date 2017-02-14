@@ -18,4 +18,11 @@ namespace mca.providex
 
         public string Text { get; set; }
     }
+
+
+    public enum ProductEnums
+    {
+        SearchByItemCode = 1,
+        SearchByItemCodeDesc = 2,
+    }
 }

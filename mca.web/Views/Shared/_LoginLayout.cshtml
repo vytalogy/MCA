@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />   
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>MCA-CORPORATION</title>
+
+    <!-- Bootstrap -->
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/my-style.css" rel="stylesheet" />
+
+</head>
+<body class="login-bg">
+    <nav class="navbar navbar-default">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#"><div class="logo"><img class="img-responsive" src="~/Images/logo.jpg" alt="MCA-CORPORATION"></div></a>
+            </div>
+        </div><!-- /.container-fluid -->
+    </nav>
+
+    @RenderBody()
+
+    <div class="container-fluid footer-black">
+        <div class="container">
+            <div class="row">
+                <p>© MCA CORPORATION MANUFACTURING COMPANY @DateTime.Now.Year</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/Scripts/jquery-3.1.1.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>
