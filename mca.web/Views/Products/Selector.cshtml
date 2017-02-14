@@ -1,11 +1,14 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Product Selector";
 }
 
 @section Styles
 {
     <style type="text/css">
+        .default-box-style {
+            min-width: 260px;
+            min-height: 182px;
+        }
     </style>
 }
 
@@ -17,9 +20,9 @@
         </div>
         <div class="breadcrumb-nav">
             <ol class="breadcrumb">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Product Search</a></li>
-                <li class="active"><a href="#">Product Selector</a></li>
+                <li><a href="@Url.Action("Home")">Home</a></li>
+                <li><a href="@Url.Action("Search")">Product Search</a></li>
+                <li class="active"><a href="@Url.Action("Selector")">Product Selector</a></li>
             </ol>
         </div>
     </div>
@@ -36,55 +39,55 @@
                     <div class="side-catagory">
                         <div class="radio">
                             <label>
-                                <input type="radio" name="optradio">
+                                <input type="radio" name="optradio" value="Microwave" class="productselector" data-value="Microwaves">
                                 Microwaves
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="optradio">
+                                <input type="radio" name="optradio" value="Cook" class="productselector" data-value="Microwave Cookware">
                                 Microwave Cookware
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="optradio">
+                                <input type="radio" name="optradio" value="Refrigerator" class="productselector" data-value="Refrigerators">
                                 Refrigerators
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="optradio">
+                                <input type="radio" name="optradio" value="Cooler" class="productselector" data-value="Beverage Coolers">
                                 Beverage Coolers
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="optradio">
+                                <input type="radio" name="optradio" value="Freezer" class="productselector" data-value="Freezers">
                                 Freezers
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="optradio">
+                                <input type="radio" name="optradio" value="Ice Maker" class="productselector" data-value="Ice Makers">
                                 Ice Makers
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="optradio">
+                                <input type="radio" name="optradio" value="Small Appliance" class="productselector" data-value="Small Appliances">
                                 Small Appliances
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="optradio">
+                                <input type="radio" name="optradio" value="Dishwasher" class="productselector" data-value="Dishwashers">
                                 Dishwashers
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="optradio">
+                                <input type="radio" name="optradio" value="Part" class="productselector" data-value="Parts">
                                 Parts
                             </label>
                         </div>
@@ -93,216 +96,8 @@
             </div>
         </div>
         <div class="col-md-9 col-sm-9 col-xs-12">
-            <div class="row">
-                <div class="result-heading">
-                    <div class="heading-r">
-                        <h2>Microwave</h2>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 col-sm-4 col-xs-12">
-                            <div class="view view-fifth">
-                                <div class="bg-box">
-                                    <h1>MC01655F</h1>
-                                    <h2>
-                                        1.6 cu. ft. Over-the-Range
-                                        Microwave Oven
-                                    </h2>
-                                </div>
-                                <a href="#">
-                                    <div class="mask">
-                                        <div class="bg-box-red">
-                                            <h1>MC01655F</h1>
-                                            <h2>
-                                                1.6 cu. ft. Over-the-Range
-                                                Microwave Oven
-                                            </h2>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-4 col-xs-12">
-                            <div class="view view-fifth">
-                                <div class="bg-box">
-                                    <h1>MCD1110SB</h1>
-                                    <h2>
-                                        1.1 cu. ft. Countertop
-                                        Microwave Oven
-                                    </h2>
-                                </div>
-                                <a href="#">
-                                    <div class="mask">
-                                        <div class="bg-box-red">
-                                            <h1>MCD1110SB</h1>
-                                            <h2>
-                                                1.1 cu. ft. Countertop
-                                                Microwave Oven
-                                            </h2>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-4 col-xs-12">
-                            <div class="view view-fifth">
-                                <div class="bg-box">
-                                    <h1>MCM1310B</h1>
-                                    <h2>
-                                        1.1 cu. ft. Countertop
-                                        Microwave Oven
-                                    </h2>
-                                </div>
-                                <a href="#">
-                                    <div class="mask">
-                                        <div class="bg-box-red">
-                                            <h1>MCM1310B</h1>
-                                            <h2>
-                                                1.1 cu. ft. Countertop
-                                                Microwave Oven
-                                            </h2>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 col-sm-4 col-xs-12">
-                            <div class="view view-fifth">
-                                <div class="bg-box">
-                                    <h1>MCM1310B</h1>
-                                    <h2>
-                                        1.1 cu. ft. Countertop
-                                        Microwave Oven
-                                    </h2>
-                                </div>
-                                <a href="#">
-                                    <div class="mask">
-                                        <div class="bg-box-red">
-                                            <h1>MCM1310B</h1>
-                                            <h2>
-                                                1.1 cu. ft. Countertop
-                                                Microwave Oven
-                                            </h2>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-4 col-xs-12">
-                            <div class="view view-fifth">
-                                <div class="bg-box">
-                                    <h1>MCM1310B</h1>
-                                    <h2>
-                                        1.1 cu. ft. Countertop
-                                        Microwave Oven
-                                    </h2>
-                                </div>
-                                <a href="#">
-                                    <div class="mask">
-                                        <div class="bg-box-red">
-                                            <h1>MCM1310B</h1>
-                                            <h2>
-                                                1.1 cu. ft. Countertop
-                                                Microwave Oven
-                                            </h2>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-4 col-xs-12">
-                            <div class="view view-fifth">
-                                <div class="bg-box">
-                                    <h1>MCM1310B</h1>
-                                    <h2>
-                                        1.1 cu. ft. Countertop
-                                        Microwave Oven
-                                    </h2>
-                                </div>
-                                <a href="#">
-                                    <div class="mask">
-                                        <div class="bg-box-red">
-                                            <h1>MCM1310B</h1>
-                                            <h2>
-                                                1.1 cu. ft. Countertop
-                                                Microwave Oven
-                                            </h2>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 col-sm-4 col-xs-12">
-                            <div class="view view-fifth">
-                                <div class="bg-box">
-                                    <h1>MCM1310B</h1>
-                                    <h2>
-                                        1.1 cu. ft. Countertop
-                                        Microwave Oven
-                                    </h2>
-                                </div>
-                                <a href="#">
-                                    <div class="mask">
-                                        <div class="bg-box-red">
-                                            <h1>MCM1310B</h1>
-                                            <h2>
-                                                1.1 cu. ft. Countertop
-                                                Microwave Oven
-                                            </h2>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-4 col-xs-12">
-                            <div class="view view-fifth">
-                                <div class="bg-box">
-                                    <h1>MCM1310B</h1>
-                                    <h2>
-                                        1.1 cu. ft. Countertop
-                                        Microwave Oven
-                                    </h2>
-                                </div>
-                                <a href="#">
-                                    <div class="mask">
-                                        <div class="bg-box-red">
-                                            <h1>MCM1310B</h1>
-                                            <h2>
-                                                1.1 cu. ft. Countertop
-                                                Microwave Oven
-                                            </h2>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-4 col-xs-12">
-                            <div class="view view-fifth">
-                                <div class="bg-box">
-                                    <h1>MCM1310B</h1>
-                                    <h2>
-                                        1.1 cu. ft. Countertop
-                                        Microwave Oven
-                                    </h2>
-                                </div>
-                                <a href="#">
-                                    <div class="mask">
-                                        <div class="bg-box-red">
-                                            <h1>MCM1310B</h1>
-                                            <h2>
-                                                1.1 cu. ft. Countertop
-                                                Microwave Oven
-                                            </h2>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="row" id="user_content">
+               
             </div>
         </div>
     </div>
@@ -311,8 +106,35 @@
 @section Scripts
 {
     <script type="text/javascript" lang="en">
-        $(function () {
-            console.log('hello world');
+        $(function () {           
+            var $radios = $('input:radio[name=optradio]');
+            if ($radios.is(':checked') === false) {
+                $radios.filter('[value=Microwave]').prop('checked', true);
+            }
+
+            $.ajax({
+                url: '@Url.Action("_ProductFilter", "Products")',
+                data: { filter: "Microwave", Header: "Microwaves" },
+                cache: false,
+                type: "GET",
+                success: function (data) {
+                    $("#user_content").empty().html(data);
+                }
+            });
+        });
+
+        $(document).on("change", ".productselector", function () {    
+            var value = $('input[name=optradio]:checked').val();
+            var header = $(this).attr("data-value");
+             $.ajax({
+                 url: '@Url.Action("_ProductFilter", "Products")',
+                 data: { filter: value, Header: header },
+                 cache: false,
+                 type: "GET",                
+                 success: function (data) {
+                     $("#user_content").empty().html(data);
+                 }
+             });   
         });
     </script>
 }

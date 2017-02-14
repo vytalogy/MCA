@@ -4,7 +4,7 @@
 }
 
 @section Styles
-{    
+{
     <style type="text/css">
     </style>
 }
@@ -17,59 +17,80 @@
         </div>
         <div class="breadcrumb-nav">
             <ol class="breadcrumb">
-                <li><a href="#">Home</a></li>
-                <li class="active"><a href="#">Product Search</a></li>
+                <li><a href="@Url.Action("Home")">Home</a></li>
+                <li class="active"><a href="@Url.Action("Search")">Product Search</a></li>
             </ol>
         </div>
     </div>
 </div>
 
-@using (Html.BeginForm("Detail", "Products", FormMethod.Get))
-{
-    <div class="container container-bg page-height">
-        <div class="row">
-            <div class="product-search-content">
-                <h2>
-                    Please input the Product Name/Model Number in the Search Box
-                    below and click on "Submit"
-                </h2>
-                <div class="search-input">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Product Name/Model Number" name="productName" id="productName">
-                        <input type="hidden" name="productID" id="productID">
-                    </div>
-                    <div class="button"> <button type="submit" class="button">Submit</button> </div>
+
+<div class="container container-bg page-height">
+    <div class="row">
+        <div class="product-search-content">
+            <h2>
+                Please input the Product Name/Model Number in the Search Box
+                below and click on "Submit"
+            </h2>
+            <div class="search-input">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Product Name/Model Number" name="productName" id="productName" maxlength="20">
+                    <input type="hidden" name="productID" id="productID">
                 </div>
+                <div class="button"> <button type="button" class="button" id="btnsearch">Submit</button> </div>
             </div>
         </div>
     </div>
-}
+</div>
+
 
 @section Scripts
-{    
+{
     <script type="text/javascript" language="javascript">
-        $("#productName").autocomplete({
-            minlength: 3,
+        $(function () {
+            $("#productName").focus();
+        });
+
+        $("#productName").autocomplete({       
+
             source: function (request, response) {
-                $.ajax({
-                    url: '@Url.Action("Autocomplete","Products")',
-                    type: "POST",
-                    dataType: "json",
-                    data: { Prefix: request.term },
-                    success: function (data) {
-                        response($.map(data, function (item) {
-                            return {
-                                label: item.Name,
-                                value: item.Name,
-                                id: item.Id
-                            };
-                        }))
-                    }
-                })
-            },
+                if (request.term.length >= 3) {
+                    $.ajax({
+                        url: '@Url.Action("Autocomplete","Products")',
+                        type: "GET",
+                        dataType: "json",
+                        data: { Prefix: request.term },
+                        success: function (data) {
+                            if (data != null) {
+                                response($.map(data, function (item) {
+                                    return {
+                                        label: item.Name,
+                                        value: item.Name,
+                                        id: item.Id
+                                    };
+                                }))
+                            }
+                        }
+                    })
+                }                
+            },          
+
             select: function (event, ui) {
                 $("#productID").val(ui.item.id);
             },
         });
+
+        $(document).on("click", "#btnsearch", function () {
+            var productName = $("#productName").val();
+            if (productName == '') {
+                $("#productID").val('');
+            }
+           
+            var value = $("#productID").val();
+            if (value != '' && value != null) {
+                window.location.href = "/Products/Detail?productID=" + value;
+            }
+        });
+
     </script>
 }
