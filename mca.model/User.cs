@@ -19,5 +19,6 @@ namespace mca.model
         public int CreatedBy { set; get; }
         public DateTime CreatedOn { set; get; }
         public Boolean Active { set; get; }
+        public String RoleName { set; get; }
     }
 }

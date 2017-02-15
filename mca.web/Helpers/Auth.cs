@@ -47,11 +47,11 @@ namespace mca.web.Helpers
             }
         }      
 
-        public static int RoleId
+        public static string RoleName
         {
             get
             {
-                return HttpContext.Current.Session["RoleId"].ConvertToInt();
+                return HttpContext.Current.Session["RoleName"].ConvertToString();
             }
         }
 

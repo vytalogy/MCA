@@ -35,7 +35,8 @@ namespace mca.web.Controllers
                     System.Web.HttpContext.Current.Session["UserId"] = q.id;
                     System.Web.HttpContext.Current.Session["UserName"] = q.UserName;
                     System.Web.HttpContext.Current.Session["IsActive"] = q.Active ? "true" : "false";
-
+                    System.Web.HttpContext.Current.Session["RoleName"] = q.RoleName;
+                   
                     return RedirectToAction("Home", "Products");
                 }
                 else

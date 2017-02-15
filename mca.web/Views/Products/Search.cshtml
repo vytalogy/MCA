@@ -34,8 +34,8 @@
             </h2>
             <div class="search-input">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Product Name/Model Number" name="productName" id="productName" maxlength="20">
-                    <input type="hidden" name="productID" id="productID">
+                    <input type="text" class="form-control" placeholder="Product Name/Model Number" name="productName" id="productName" maxlength="20" autofocus />
+                    <input type="hidden" name="productID" id="productID" />
                 </div>
                 <div class="button"> <button type="button" class="button" id="btnsearch">Submit</button> </div>
             </div>
@@ -48,7 +48,7 @@
 {
     <script type="text/javascript" language="javascript">
         $(function () {
-            $("#productName").focus();
+         
         });
 
         $("#productName").autocomplete({       
