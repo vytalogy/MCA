@@ -28,6 +28,10 @@ namespace mca.web
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
                       "~/Scripts/jquery-ui.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/custom").Include(
+                      "~/Scripts/custom.js",
+                      "~/Scripts/bootstrap-popover-x.js"));
+
             #endregion
 
             #region Style

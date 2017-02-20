@@ -1,1 +1,212 @@
-﻿<h1>@ViewBag.productID</h1>
+﻿@model mca.web.Models.ProductDetailModel
+
+@{
+    ViewBag.Title = "Product Detail";
+}
+
+<div class="bg-texture">
+    <div class="container-fluid">
+        <div class="container">
+            <div class="row">
+                <div class="page-heading">
+                    <img class="img-responsive" src="~/Images/search-icon-small.png" alt="search-icon-small">
+                    <h1>Product Detail</h1>
+                </div>
+                <div class="breadcrumb-nav">
+                    <ol class="breadcrumb">
+                        <li><a href="@Url.Action("Home")">Home</a></li>
+                        <li><a href="@Url.Action("Search")">Product Search</a></li>
+                        <li><a href="@Url.Action("Selector")">Product Selector</a></li>
+                        <li class="active"><a href="@Url.Action("Detail", new { productID = ViewBag.productID })">Product Detail</a></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="container container-bg page-height">
+            <div class="row">
+                <div class="modelbox-table">
+                    <div style="overflow-x:auto;">
+                        <table>
+                            <tr>
+                                <th>Model Number</th>
+                                <th>Description</th>
+                                <th>Brand</th>
+                            </tr>
+                            <tr>
+                                <td>@Model.ProductId</td>
+                                <td>@Model.Description</td>
+                                <td>@Model.Brand</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="colapse-table">
+                            <table class="table" style="border-collapse:collapse;display: block;overflow-x: auto;">
+                                @foreach (var item in Model.Items)
+                                {
+                                    <thead>
+                                        <tr>
+                                            <th>Month/Year</th>
+                                            <th>Warehouse</th>
+                                            <th>On Hand</th>
+                                            <th>@item.TopCustomer1</th>
+                                            <th>@item.TopCustomer2</th>
+                                            <th>@item.TopCustomer3</th>
+                                            <th></th>
+                                            <th>Shipped Quantity</th>
+                                            <th>Already Shipped</th>
+                                            <th>On Order</th>
+                                            <th>Transfer</th>
+                                            <th>Proj/Act & Quantity </th>
+                                            <th>MOS</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr class="mytr">
+                                            <td>@item.MonthYear</td>
+                                            <td>Total</td>
+                                            <td>@item.TotalOnHand</td>
+                                            <td>@item.TopCustomer1Qty.Split('.')[0]</td>
+                                            <td>@item.TopCustomer2Qty.Split('.')[0]</td>
+                                            <td>@item.TopCustomer3Qty.Split('.')[0]</td>
+                                            <td>
+                                                <button class="btn btn-primary popTbl" data-target="#myPopover3">More</button>
+                                            </td>
+                                            <td>102</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <th>20</th>
+                                            <td>236</td>
+                                            <td>3.01</td>
+                                            <td>
+                                                <button class="btn btn-default btn-xs accordion-toggle shrow" data-toggle="" id="first-row" data-target=".demo1">
+                                                    <span id="first-pm" class="glyphicon"></span>
+                                                </button>
+                                            </td>
+                                        </tr>
+
+                                        @foreach (var subitem in item.Items)
+                                        {
+                                            <tr class="hiddenRow accordian-body demo1">
+                                                <td>-</td>
+                                                <td>@subitem.WarehouseCode</td>
+                                                <td>@subitem.QuantityOnHand</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>80</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>20</td>
+                                                <td>236</td>
+                                                <td>281</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                }
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="myPopover3" class="colapse-table table-marg poptable">
+                        <div class="arrow"></div>
+                        <div class="popover-content">
+                            <table class="table" style="border-collapse:collapse;display: block;overflow-x: auto;">
+                                <thead>
+                                    <tr>
+                                        <th>Month/Year</th>
+                                        <th>Warehouse</th>
+                                        <th>On Hand</th>
+                                        <th>AHRC</th>
+                                        <th>Blue Stem </th>
+                                        <th>DIB</th>
+                                        <th></th>
+                                        <th>Shipped Quantity</th>
+                                        <th>Already Shipped</th>
+                                        <th>On Order</th>
+                                        <th>Transfer</th>
+                                        <th>Proj/Act & Quantity </th>
+                                        <th>MOS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>Jan, 2014</th>
+                                        <th>Total</th>
+                                        <th>80</th>
+                                        <th>4</th>
+                                        <th>18</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>102</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>20</th>
+                                        <th>236</th>
+                                        <th>3.01</th>
+                                    </tr>
+                                    <tr>
+                                        <td>-</td>
+                                        <td>BNX</td>
+                                        <td>80</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>80</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>20</td>
+                                        <td>236</td>
+                                        <td>281</td>
+                                    </tr>
+                                    <tr>
+                                        <td>-</td>
+                                        <td>BNX</td>
+                                        <td>80</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>80</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>20</td>
+                                        <td>236</td>
+                                        <td>281</td>
+                                    </tr>
+                                    <tr>
+                                        <td>-</td>
+                                        <td>BNX</td>
+                                        <td>80</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>80</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>20</td>
+                                        <td>236</td>
+                                        <td>281</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+
+}
