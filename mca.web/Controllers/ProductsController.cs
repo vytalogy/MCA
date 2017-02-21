@@ -33,13 +33,11 @@ namespace mca.web.Controllers
         [HttpGet]
         public ActionResult Detail(string productID)
         {
-            ProductDAL _product = new ProductDAL();
-
-            var EmpDet = _product.GetItemByFilter(productID);
-
+            ProductDAL _product = new ProductDAL { };
+            dynamic EmpDet = _product.GetItemDetail(productID);
             ProductDetailModel model = new ProductDetailModel { Items = new List<mca.web.Models._ProductItem> { } };
             model.ProductId = EmpDet.CI_Item;
-            model.Description = EmpDet.ItemCodeDesc;
+            model.Description = !string.IsNullOrEmpty(EmpDet.ItemCodeDesc) ? EmpDet.ItemCodeDesc : "";
             model.Brand = !string.IsNullOrEmpty(EmpDet.UDF_BRAND) ? EmpDet.UDF_BRAND : "None";
 
             var SubItems = _product.GetItemWareHouse(productID);
@@ -63,6 +61,7 @@ namespace mca.web.Controllers
                 }).ToList(),
             }));
 
+            EmpDet = SubItems = null;
             return View(model);
         }
 
@@ -85,7 +84,7 @@ namespace mca.web.Controllers
                 return null;
 
             ProductDAL _product = new ProductDAL { };
-            var EmpDet = _product.GetItemByFilter(Prefix, ProductEnums.SearchByItemCode).Select(s => new { Name = s.Text, Id = s.Value });
+            var EmpDet = _product.GetItemByFilter(Prefix, ProductEnums.SearchByItemCode).Select(s => new { Name = s[1].ConvertToString(), Id = s[0].ConvertToString() });
             return Json(EmpDet, JsonRequestBehavior.AllowGet);
         }
 
@@ -94,7 +93,7 @@ namespace mca.web.Controllers
         {
             ViewBag.Header = Header;
             ProductDAL _product = new ProductDAL();
-            var EmpDet = _product.GetItemByFilter(filter, ProductEnums.SearchByItemCodeDesc).Select(s => new SelectListItem { Text = s.Text, Value = s.Value });
+            var EmpDet = _product.GetItemByFilter(filter, ProductEnums.SearchByItemCodeDesc).Select(s => new SelectListItem { Text = s[1].ConvertToString(), Value = s[0].ConvertToString() });
             return PartialView(EmpDet);
         }
     }

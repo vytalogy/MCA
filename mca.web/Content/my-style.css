@@ -850,20 +850,7 @@ border:2px solid #231f20;
         color: #FFFFFF;
     }
 
-    /*.colapse-table tbody tr:nth-child(1) {
-        background: rgba(234,63,72,1);
-        background: -moz-linear-gradient(top, rgba(234,63,72,1) 0%, rgba(234,63,72,1) 48%, rgba(231,37,47,1) 48%, rgba(231,37,47,1) 49%, rgba(231,37,47,1) 100%);
-        background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(234,63,72,1)), color-stop(48%, rgba(234,63,72,1)), color-stop(48%, rgba(231,37,47,1)), color-stop(49%, rgba(231,37,47,1)), color-stop(100%, rgba(231,37,47,1)));
-        background: -webkit-linear-gradient(top, rgba(234,63,72,1) 0%, rgba(234,63,72,1) 48%, rgba(231,37,47,1) 48%, rgba(231,37,47,1) 49%, rgba(231,37,47,1) 100%);
-        background: -o-linear-gradient(top, rgba(234,63,72,1) 0%, rgba(234,63,72,1) 48%, rgba(231,37,47,1) 48%, rgba(231,37,47,1) 49%, rgba(231,37,47,1) 100%);
-        background: -ms-linear-gradient(top, rgba(234,63,72,1) 0%, rgba(234,63,72,1) 48%, rgba(231,37,47,1) 48%, rgba(231,37,47,1) 49%, rgba(231,37,47,1) 100%);
-        background: linear-gradient(to bottom, rgba(234,63,72,1) 0%, rgba(234,63,72,1) 48%, rgba(231,37,47,1) 48%, rgba(231,37,47,1) 49%, rgba(231,37,47,1) 100%);
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ea3f48', endColorstr='#e7252f', GradientType=0 );
-        color: #FFFFFF;
-        font-family: 'museo_sans500', Arial, sans-serif;
-    }*/
-
-    .mytr {
+    .colapse-table tbody tr:nth-child(1) {
         background: rgba(234,63,72,1);
         background: -moz-linear-gradient(top, rgba(234,63,72,1) 0%, rgba(234,63,72,1) 48%, rgba(231,37,47,1) 48%, rgba(231,37,47,1) 49%, rgba(231,37,47,1) 100%);
         background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(234,63,72,1)), color-stop(48%, rgba(234,63,72,1)), color-stop(48%, rgba(231,37,47,1)), color-stop(49%, rgba(231,37,47,1)), color-stop(100%, rgba(231,37,47,1)));
@@ -970,6 +957,31 @@ border:2px solid #231f20;
     .poptable.trued {
         visibility: visible;
         opacity: 1;
+    }
+
+
+
+.modal-number-box {
+    margin: 0px auto;
+    text-align: center;
+    vertical-align: central;
+    padding: 18px;
+}
+
+
+
+    .modal-number-box th {
+        background-color: #efefef;
+    }
+
+    .modal-number-box table, th, td {
+        border: 1px solid #dcdcdc;
+        border-collapse: collapse;
+    }
+
+    .modal-number-box th, td {
+        padding: 5px;
+        text-align: left;
     }
 
 

@@ -14,9 +14,9 @@ namespace mca.providex
 {
     public class ProductDAL : BaseClass
     {
-        public List<CustomListItem> GetItemByFilter(string filter, ProductEnums value)
+        public List<ArrayList> GetItemByFilter(string filter, ProductEnums value)
         {
-            List<CustomListItem> List = new List<CustomListItem> { };
+            List<ArrayList> List = new List<ArrayList> { };
             string query = string.Empty;
             if (value == ProductEnums.SearchByItemCode)
                 query = @"select ItemCode,ItemCodeDesc from CI_Item where itemcode like @filter +'%' or ItemCodeDesc like '%' + @filter + '%'";
@@ -25,17 +25,23 @@ namespace mca.providex
 
             List<dynamic> _data = this._db.Query<dynamic>(query, new { filter = filter }).ToList();
             if (_data != null && _data.Count() > 0)
-                List = _data.Select(item => new CustomListItem { Value = item.ItemCode, Text = item.ItemCodeDesc }).ToList();
+            {
+                List = _data.Select(item => new ArrayList
+                {
+                    item.ItemCode,
+                    item.ItemCodeDesc
+                }).ToList();
+            }
 
             _data = null;
             query = string.Empty;
             return List;
         }
 
-        public ProductModels GetItemByFilter(string filter)
+        public dynamic GetItemDetail(string filter)
         {
             string query = @"select CI_Item = ItemCode,ItemCodeDesc,UDF_BRAND from CI_Item where itemcode = @filter";
-            ProductModels _data = this._db.Query<ProductModels>(query, new { filter = filter }).FirstOrDefault();
+            dynamic _data = this._db.Query<dynamic>(query, new { filter = filter }).FirstOrDefault();
             return _data;
         }
 
@@ -46,10 +52,10 @@ namespace mca.providex
             string startdate = string.Format("{0:yyyy-MM}", DateTime.Now.AddMonths(-24)) + "-01";
             string enddate = string.Format("{0:yyyy-MM}", DateTime.Now.AddMonths(+13)) + "-" + lastdayofmonth;
 
-            string query = @"select YEAR = YEAR(TransactionDate), MONTH = MONTH(TransactionDate), MMM = UPPER(left(DATENAME(MONTH, TransactionDate), 3))
-                                FROM IM_ItemTransactionHistory where ItemCode = @filter and (TransactionDate >= @startdate and TransactionDate <= @enddate)
-                                GROUP BY YEAR(TransactionDate), MONTH(TransactionDate), DATENAME(MONTH, TransactionDate)
-                                ORDER BY YEAR desc, MONTH desc";
+            string query = @"SELECT YEAR = YEAR(TRANSACTIONDATE), MONTH = MONTH(TRANSACTIONDATE), MMM = UPPER(LEFT(DATENAME(MONTH, TRANSACTIONDATE), 3))
+                                FROM IM_ITEMTRANSACTIONHISTORY WHERE ITEMCODE = @FILTER AND (TRANSACTIONDATE >= @STARTDATE AND TRANSACTIONDATE <= @ENDDATE)
+                                GROUP BY YEAR(TRANSACTIONDATE), MONTH(TRANSACTIONDATE), DATENAME(MONTH, TRANSACTIONDATE)
+                                ORDER BY YEAR DESC, MONTH DESC";
 
             List<dynamic> _data = this._db.Query<dynamic>(query, new { filter = filter, startdate = startdate, enddate = enddate }).ToList();
             foreach (var item in _data)
@@ -64,6 +70,7 @@ namespace mca.providex
                          where ItemCode = @filter AND (TransactionDate BETWEEN @startdate AND @enddate) and CustomerNo is not null
                          group by CustomerNo order by CustomerNo";
                 List<dynamic> TopCustomer = this._db.Query<dynamic>(query, new { filter = filter, startdate = startdate, enddate = enddate }).ToList();
+
                 if (TopCustomer != null && TopCustomer.Count() > 0)
                 {
                     if (TopCustomer.Count() == 3)
@@ -104,29 +111,61 @@ namespace mca.providex
                         _ProductDetail detail = new _ProductDetail { };
                         detail.WarehouseCode = subitem.WarehouseCode;
 
-                        query = @"select top 3 Quantity=sum(TransactionQty) From IM_ItemTransactionHistory
-                         where ItemCode = @filter AND (TransactionDate BETWEEN @startdate AND @enddate) and CustomerNo is not null
-                         and WarehouseCode = @WarehouseCode group by CustomerNo order by CustomerNo";
-                        List<dynamic> TopCustomer1 = this._db.Query<dynamic>(query, new { filter = filter, startdate = startdate, enddate = enddate, WarehouseCode = detail.WarehouseCode }).ToList();
-                        if (TopCustomer1 != null && TopCustomer1.Count() > 0)
+                        if (!string.IsNullOrEmpty(_ProductItem.TopCustomer1))
                         {
-                            if (TopCustomer1.Count() == 3)
-                            {                                
-                                detail.Customer1Qty = Math.Abs(TopCustomer1[0].Quantity).ToString();
-                                detail.Customer2Qty = Math.Abs(TopCustomer1[1].Quantity).ToString();                               
-                                detail.Customer3Qty = Math.Abs(TopCustomer1[2].Quantity).ToString();
-                            }
-                            else if (TopCustomer1.Count() == 2)
+                            query = @"select TotalCount = count(TransactionQty),TotalSum = sum(TransactionQty) From IM_ItemTransactionHistory
+                                  where ItemCode = @filter AND (TransactionDate BETWEEN @startdate AND @enddate)
+                                  and CustomerNo = @Customer and WarehouseCode = @WarehouseCode";
+
+                            List<dynamic> TopCustomer1 = this._db.Query<dynamic>(query, new
                             {
-                                detail.Customer1Qty = Math.Abs(TopCustomer1[0].Quantity).ToString();
-                                detail.Customer2Qty = Math.Abs(TopCustomer1[1].Quantity).ToString();
-                            }
-                            else if (TopCustomer1.Count() == 1)
-                            {
-                                detail.Customer3Qty = Math.Abs(TopCustomer1[0].Quantity).ToString();
-                            }
+                                filter = filter,
+                                startdate = startdate,
+                                enddate = enddate,
+                                WarehouseCode = detail.WarehouseCode,
+                                Customer = _ProductItem.TopCustomer1,
+                            }).ToList();
+
+                            if (TopCustomer1[0].TotalSum != null)
+                                detail.Customer1Qty = Math.Abs(TopCustomer1[0].TotalSum).ToString();
                         }
-                        TopCustomer1 = null;
+                        if (!string.IsNullOrEmpty(_ProductItem.TopCustomer2))
+                        {
+                            query = @"select TotalCount = count(TransactionQty),TotalSum = sum(TransactionQty) From IM_ItemTransactionHistory
+                                  where ItemCode = @filter AND (TransactionDate BETWEEN @startdate AND @enddate)
+                                  and CustomerNo = @Customer and WarehouseCode = @WarehouseCode";
+
+                            List<dynamic> TopCustomer1 = this._db.Query<dynamic>(query, new
+                            {
+                                filter = filter,
+                                startdate = startdate,
+                                enddate = enddate,
+                                WarehouseCode = detail.WarehouseCode,
+                                Customer = _ProductItem.TopCustomer2,
+                            }).ToList();
+
+                            if (TopCustomer1[0].TotalSum != null)
+                                detail.Customer2Qty = Math.Abs(TopCustomer1[0].TotalSum).ToString();
+                        }
+
+                        if (!string.IsNullOrEmpty(_ProductItem.TopCustomer3))
+                        {
+                            query = @"select TotalCount = count(TransactionQty),TotalSum = sum(TransactionQty) From IM_ItemTransactionHistory
+                                  where ItemCode = @filter AND (TransactionDate BETWEEN @startdate AND @enddate)
+                                  and CustomerNo = @Customer and WarehouseCode = @WarehouseCode";
+
+                            List<dynamic> TopCustomer1 = this._db.Query<dynamic>(query, new
+                            {
+                                filter = filter,
+                                startdate = startdate,
+                                enddate = enddate,
+                                WarehouseCode = detail.WarehouseCode,
+                                Customer = _ProductItem.TopCustomer3,
+                            }).ToList();
+
+                            if (TopCustomer1[0].TotalSum != null)
+                                detail.Customer3Qty = Math.Abs(TopCustomer1[0].TotalSum).ToString();
+                        }                        
 
                         query = @"select QuantityOnHand From IM_ItemWarehouse where ItemCode = @filter and WarehouseCode = @WarehouseCode";
                         List<dynamic> QuantityList = this._db.Query<dynamic>(query, new { filter = filter, WarehouseCode = detail.WarehouseCode, }).ToList();

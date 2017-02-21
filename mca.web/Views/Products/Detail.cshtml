@@ -46,16 +46,19 @@
                     <div class="row">
                         <div class="colapse-table">
                             <table class="table" style="border-collapse:collapse;display: block;overflow-x: auto;">
+                                @{int count = 1; string str = string.Empty; }
                                 @foreach (var item in Model.Items)
                                 {
+                                    decimal value = (item.TopCustomer1Qty.ConvertToDecimal() + item.TopCustomer2Qty.ConvertToDecimal() + item.TopCustomer3Qty.ConvertToDecimal());
+
                                     <thead>
                                         <tr>
                                             <th>Month/Year</th>
                                             <th>Warehouse</th>
                                             <th>On Hand</th>
-                                            <th>@item.TopCustomer1</th>
-                                            <th>@item.TopCustomer2</th>
-                                            <th>@item.TopCustomer3</th>
+                                            <th style="min-width: 70px;">@item.TopCustomer1</th>
+                                            <th style="min-width: 70px;">@item.TopCustomer2</th>
+                                            <th style="min-width: 70px;">@item.TopCustomer3</th>
                                             <th></th>
                                             <th>Shipped Quantity</th>
                                             <th>Already Shipped</th>
@@ -67,7 +70,13 @@
                                     </thead>
 
                                     <tbody>
-                                        <tr class="mytr">
+                                        @if (count == 1)
+                                        {
+                                            str = "first-row";
+                                        }
+                                        else { str = "second-row"; }
+                                        
+                                        <tr data-toggle="" id="@str" data-target=".demo1" class="accordion-toggle shrow mytr">
                                             <td>@item.MonthYear</td>
                                             <td>Total</td>
                                             <td>@item.TotalOnHand</td>
@@ -77,30 +86,40 @@
                                             <td>
                                                 <button class="btn btn-primary popTbl" data-target="#myPopover3">More</button>
                                             </td>
-                                            <td>102</td>
+                                            <td>@string.Format("{0:N0}", value)</td>
                                             <td>-</td>
                                             <td>-</td>
                                             <th>20</th>
                                             <td>236</td>
                                             <td>3.01</td>
-                                            <td>
-                                                <button class="btn btn-default btn-xs accordion-toggle shrow" data-toggle="" id="first-row" data-target=".demo1">
-                                                    <span id="first-pm" class="glyphicon"></span>
-                                                </button>
-                                            </td>
+                                            <th>
+                                                @if (count == 1)
+                                                {
+                                                    <button class="btn btn-default btn-xs accordion-toggle shrow">
+                                                        <span id="first-pm" class="glyphicon glyphicon-minus"></span>
+                                                    </button>
+                                                }
+                                                else
+                                                {
+                                                    <button class="btn btn-default btn-xs accordion-toggle shrow">
+                                                        <span id="first-pm" class="glyphicon glyphicon-plus"></span>
+                                                    </button>
+                                                }
+                                            </th>
                                         </tr>
 
                                         @foreach (var subitem in item.Items)
                                         {
+                                            value = (subitem.Customer1Qty.ConvertToDecimal() + subitem.Customer2Qty.ConvertToDecimal() + subitem.Customer3Qty.ConvertToDecimal());
                                             <tr class="hiddenRow accordian-body demo1">
                                                 <td>-</td>
                                                 <td>@subitem.WarehouseCode</td>
                                                 <td>@subitem.QuantityOnHand</td>
+                                                <td>@Html.Raw(string.IsNullOrEmpty(subitem.Customer1Qty) ? "-" : subitem.Customer1Qty.Split('.')[0])</td>
+                                                <td>@Html.Raw(string.IsNullOrEmpty(subitem.Customer2Qty) ? "-" : subitem.Customer2Qty.Split('.')[0])</td>
+                                                <td>@Html.Raw(string.IsNullOrEmpty(subitem.Customer3Qty) ? "-" : subitem.Customer3Qty.Split('.')[0])</td>
                                                 <td>-</td>
-                                                <td>-</td>
-                                                <td>-</td>
-                                                <td>-</td>
-                                                <td>80</td>
+                                                <td>@string.Format("{0:N0}", value)</td>
                                                 <td>-</td>
                                                 <td>-</td>
                                                 <td>20</td>
@@ -109,6 +128,7 @@
                                             </tr>
                                         }
                                     </tbody>
+                                    count = count + 1;
                                 }
                             </table>
                         </div>

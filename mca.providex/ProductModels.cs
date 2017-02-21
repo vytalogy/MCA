@@ -5,14 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace mca.providex
-{
-    public class ProductModels
-    {
-        public string CI_Item { get; set; }
-        public string ItemCodeDesc { get; set; }
-        public string UDF_BRAND { get; set; }
-    }
-    
+{    
     public class CustomListItem
     {
         public string Value { get; set; }
