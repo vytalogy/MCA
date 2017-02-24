@@ -1,17 +1,18 @@
-﻿  <!-- Log off row -->
-<div class="container-fluid black-g">
-    <div class="container">
-        <div class="row">
-            <div class="logoff">
-                <a href="@Url.Action("Logout","Account")"><i class="fa fa-power-off" aria-hidden="true" title="@(Auth.RoleName +" - "+ Auth.UserName)">&nbsp; Log Off</i></a>
+﻿@if (Auth.isLogin)
+{
+     <!-- Log off row -->
+    <div class="container-fluid black-g">
+        <div class="container">
+            <div class="row">
+                <div class="logoff">
+                    <a href="@Url.Action("Logout", "Account")"><i class="fa fa-power-off" aria-hidden="true" title="@(Auth.RoleName + " - " + Auth.UserName)">&nbsp; Log Off</i></a>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
+}
 <nav class="navbar navbar-default">
     <div class="container">
-        <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                 <span class="sr-only">Toggle navigation</span>
@@ -23,18 +24,17 @@
                 <div class="logo"><img class="img-responsive" src="~/Images/logo.jpg" alt="mca corporation" title="MCA-CORPORATION"></div>
             </a>
         </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="@Url.Action("Home", "Products")">Home</a></li>
-                <li><a href="@Url.Action("Search", "Products")">Product Search</a></li>
-                <li><a href="@Url.Action("Selector", "Products")">Product Selector</a></li>
-                <li><a href="@Url.Action("Forecasting", "Products")">Forecasting</a></li>
-                <li><a href="@Url.Action("Analytics", "Products")">Analytics</a></li>
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
+        @if (Auth.isLogin)
+        {
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="@Url.Action("Home", "Products")">Home</a></li>
+                    <li><a href="@Url.Action("Search", "Products")">Product Search</a></li>
+                    <li><a href="@Url.Action("Selector", "Products")">Product Selector</a></li>
+                    <li><a href="@Url.Action("Forecasting", "Products")">Forecasting</a></li>
+                    <li><a href="@Url.Action("Analytics", "Products")">Analytics</a></li>
+                </ul>
+            </div>
+        }
     </div>
-    <!-- /.container-fluid -->
 </nav>

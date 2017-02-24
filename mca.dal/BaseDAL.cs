@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -9,22 +11,28 @@ namespace mca.dal
 {
     public class BaseDAL
     {
-        protected String conn = System.Configuration.ConfigurationManager.ConnectionStrings["connection"].ConnectionString;
-        public BaseDAL(String conn)
+        private IDbConnection __db;
+        protected IDbConnection _db
         {
-            this.conn = conn;
+            get
+            {
+                return GetDBConn();
+            }
         }
-        public BaseDAL()
+
+        protected IDbConnection GetDBConn(bool bForceNew = false)
         {
-        }
-        protected SqlParameter GetSqlParameter(String name, System.Data.SqlDbType _SqlDbType, object value)
-        {
-            SqlParameter _SqlParameter = new SqlParameter((name.StartsWith("@") ? name : "@" + name), _SqlDbType);
-            if (value == null)
-                _SqlParameter.Value = System.DBNull.Value;
-            else
-                _SqlParameter.Value = value;
-            return _SqlParameter;
-        }
+            if (bForceNew)
+            {
+                //Make a new connection and return it. May be required in the future.
+                return new SqlConnection(ConfigurationManager.ConnectionStrings["connection"].ToString());
+            }
+            if (__db != null)
+            {
+                return __db;
+            }
+            __db = new SqlConnection(ConfigurationManager.ConnectionStrings["connection"].ToString());
+            return __db;
+        }      
     }
 }

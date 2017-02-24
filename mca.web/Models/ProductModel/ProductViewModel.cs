@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace mca.web.Models
 {
+    #region Product Detail Models
     public class ProductDetailModel
-    {       
-        public string ProductId { get; set; }      
-        public string Description { get; set; }       
+    {
+        public string ProductId { get; set; }
+        public string Description { get; set; }
         public string Brand { get; set; }
         public List<_ProductItem> Items { get; set; }
     }
@@ -37,4 +39,23 @@ namespace mca.web.Models
         public string Customer3Qty { get; set; } = string.Empty;
     }
 
+    #endregion
+
+
+    #region Update Model
+    public class ProductUpdateModel
+    {
+        public string ProductId { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Brand { get; set; } = string.Empty;
+        public bool isDataFound { get; set; }
+        /// <summary>
+        /// Using for foreCasting and default value should be 3
+        /// </summary>
+        public string Defaultvalue { get; set; } = "3";
+        public string isYearly { get; set; } = "Annual";
+        public List<SelectListItem> List { get; set; }
+    }   
+
+    #endregion
 }

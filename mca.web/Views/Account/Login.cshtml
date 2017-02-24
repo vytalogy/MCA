@@ -12,9 +12,16 @@
                 <div class="col-md-6 col-sm-8 content">
                     <img class="img-responsive" src="~/Images/logo-png.png" alt="mca-corporation">
                     <h1>USER LOGIN</h1>
+                    @if (TempData["error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissable" id="errorMessage">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                             @TempData["error"]
+                        </div>
+                    }
                     <div class="login-feild">
                         <div class="form-group">
-                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Email", autofocus="autofocus" })
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Email", autofocus = "autofocus" })
                         </div>
                         <div class="form-group">
                             @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password", @style = "padding-top: 6px;" })
@@ -22,6 +29,7 @@
                         <div class="button">
                             <button type="submit" class="button">Submit</button>
                         </div>
+
                         <div class="forget-error">
                             <a href="javascript:;">Forgot Password? Click Here</a>
                         </div>

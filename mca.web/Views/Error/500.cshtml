@@ -1,0 +1,35 @@
+﻿
+@{
+    ViewBag.Title = "404";  
+}
+
+<div class="container-fluid">
+    <div class="container">
+        <div class="row">
+            <div class="page-heading">
+                <i class="glyphicon glyphicon-thumbs-down " aria-hidden="true"></i>
+                <h1>Bad Request</h1>
+            </div>
+            <div class="breadcrumb-nav">
+                <ol class="breadcrumb">
+                    <li class="active">404-PAGE NOT FOUND</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="container container-bg">
+        <div class="row">
+            <div class="body-content">
+                <div class="four-page">
+                    <h1>OOPS! - PAGE NOT FOUND</h1>
+                    <img class="img-responsive" src="~/Images/404.png">
+                    <div class="button">                      
+                        <a href="@Url.Action("Home","Products")" class="btn btn-info" role="button">Back To Home</a>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

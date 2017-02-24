@@ -1,22 +1,21 @@
-$(document).ready(function(){
-		$('#first-row').find('th button span').addClass('glyphicon-minus');							
-		$('.shrow').not("[id*=first-row]").nextAll('tr').addClass('showhide');
-		$('.shrow').not("[id*=first-row]").find('th button span').addClass('glyphicon-plus');
-				
-		$('.shrow').click(function(){
-			$(this).nextAll('tr').toggleClass('showhide');
-			
-			if($(this).find('th button span').hasClass('glyphicon-plus') )
-			{
-				$(this).find('th button span').removeClass('glyphicon-plus');
-				$(this).find('th button span').addClass('glyphicon-minus');	
-			}
-			else{
-				$(this).find('th button span').removeClass('glyphicon-minus');
-				$(this).find('th button span').addClass('glyphicon-plus');	
-			}
-			
-		});
+$(document).ready(function () {
+    $('#first-row').find('th button span').addClass('glyphicon-minus');
+    $('.shrow').not("[id*=first-row]").nextAll('tr').addClass('showhide');
+    $('.shrow').not("[id*=first-row]").find('th button span').addClass('glyphicon-plus');
+
+    $('.shrow').click(function () {
+        $(this).nextAll('tr').toggleClass('showhide');
+
+        if ($(this).find('th button span').hasClass('glyphicon-plus')) {
+            $(this).find('th button span').removeClass('glyphicon-plus');
+            $(this).find('th button span').addClass('glyphicon-minus');
+        }
+        else {
+            $(this).find('th button span').removeClass('glyphicon-minus');
+            $(this).find('th button span').addClass('glyphicon-plus');
+        }
+
+    });
 });
 
 
@@ -33,6 +32,9 @@ $('.popTbl').each( function(){
 });
 
 
+
+
+     
 
 
 

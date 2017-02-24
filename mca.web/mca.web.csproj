@@ -196,6 +196,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Filter\AuthorizeAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -266,6 +267,7 @@
     <None Include="Properties\PublishProfiles\Publish.pubxml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Images\1.jpg" />
+    <Content Include="Images\404.png" />
     <Content Include="Images\checked.png" />
     <Content Include="Images\login-bg-2.jpg" />
     <Content Include="Images\logo-png.png" />
@@ -317,9 +319,12 @@
     <Content Include="Views\Products\Detail.cshtml" />
     <Content Include="Views\Products\_ProductFilter.cshtml" />
     <Content Include="Views\Shared\_LoginLayout.cshtml" />
+    <Content Include="Views\Error\404.cshtml" />
+    <Content Include="Views\Error\500.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="obj\Release\Package\PackageTmp\fonts\" />
     <Folder Include="Repositories\" />
     <Folder Include="Services\" />
   </ItemGroup>

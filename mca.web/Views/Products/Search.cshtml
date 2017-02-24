@@ -6,6 +6,7 @@
 @section Styles
 {
     <style type="text/css">
+       
     </style>
 }
 
@@ -64,8 +65,8 @@
                             if (data != null) {
                                 response($.map(data, function (item) {
                                     return {
-                                        label: item.Name,
-                                        value: item.Name,
+                                        label: item.Id + " - " + item.Name,
+                                        value: item.Id + " - " + item.Name,
                                         id: item.Id
                                     };
                                 }))

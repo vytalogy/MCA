@@ -1,10 +1,240 @@
-﻿
+﻿@model mca.web.Models.ProductUpdateModel
+
 @{
-    ViewBag.Title = "Forecasting";
+    ViewBag.Title = "Product Forecasting";
+    string value = string.Empty;
+    if (Model.isDataFound)
+    {
+        value = Model.ProductId + " - " + Model.Description;
+    }
 }
 
-<div class="container">
-    <div class="row">
-        <h1>Forecasting Coming soon. . . . .</h1>
+@section Styles
+{
+    <style>
+        .showtext {
+            display: block;
+        }
+
+        .hidetext {
+            display: none;
+        }
+    </style>
+}
+
+<div class="container-fluid">
+    <div class="container">
+        <div class="row">
+            <div class="page-heading">
+                <img class="img-responsive" src="~/Images/search-icon-small.png" alt="search-icon-small">
+                <h1>Product Search</h1>
+            </div>
+            <div class="breadcrumb-nav">
+                <ol class="breadcrumb">
+                    <li><a href="@Url.Action("Home")">Home</a></li>
+                    <li class="active"><a href="@Url.Action("Forecasting")">Product Forecasting</a></li>
+                </ol>
+            </div>
+        </div>
     </div>
 </div>
+
+<div class="container-fluid">
+    <div class="container">
+        @if (TempData["alert"].ToString() == "success")
+        {
+            <div id="errorMessage" class="row alert alert-success alert-dismissable">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Success!</strong> Record saved successfully.
+            </div>
+        }
+        else if (TempData["alert"].ToString() == "error")
+        {
+            <div id="errorMessage" class="row alert alert-danger alert-dismissable">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error!</strong> @TempData["msg"]
+            </div>
+        }
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="container container-bg page-height">
+        <div class="row">
+            <div class="product-search-content">
+                <h2>
+                    Please input the Product Name/Model Number in the Search Box
+                    below and click on "Submit"
+                </h2>
+                <div class="search-input">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Product Name/Model Number" name="productName" id="productName" maxlength="20" autofocus value="@value" />
+                        <input type="hidden" name="productID" id="productID" value="@Model.ProductId" />
+                    </div>
+                    <div class="button"> <button type="button" class="button" id="btnsearch">Submit</button> </div>
+                </div>
+            </div>
+            @if (Model.isDataFound)
+            {
+                using (Html.BeginForm("Forecasting", "Products"))
+                {
+                    @Html.HiddenFor(m => m.ProductId);
+                    @Html.HiddenFor(m => m.Description);
+
+                    <div class="modal-number-box">
+                        <div class="col-md-5 col-sm-6 col-xs-12">
+                            <table style="overflow-x:auto;">
+                                <tr>
+                                    <th>Model Number:</th>
+                                    <td>@Model.ProductId</td>
+                                </tr>
+                                <tr>
+                                    <th>Description:</th>
+                                    <td>@Model.Description</td>
+                                </tr>
+                                <tr>
+                                    <th>Current Forecasting Multiplier:</th>
+                                    <td>
+                                        @Html.TextBoxFor(m => m.Defaultvalue, new { @placeholder = "0%", @class = "form-control" })
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="button update">
+                                <button type="submit" class="button">update</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+
+                        <div class="months-data">
+
+                            <div class="radio-btns">
+                                <label class="radio-inline">
+                                    @Html.RadioButtonFor(x => x.isYearly, "Annual") Annual
+                                </label>
+                                <label class="radio-inline">
+                                    @Html.RadioButtonFor(x => x.isYearly, "Monthly") Monthly
+                                </label>
+                                <hr />
+                            </div>
+
+                            <div class="month-two row">
+                                @if (Model.List != null && Model.List.Count() > 0)
+                                {
+                                    int count = 0;
+                                    string str = "hidetext";
+                                    foreach (var item in Model.List)
+                                    {
+                                        if (count == 0 || count % 3 == 0)
+                                        {
+                                            @Html.Raw("<div class='row'>");
+                                        }
+
+                                        <div class="col-md-4 col-sm-4 col-xs-12">
+                                            <div class="form-group">
+                                                <label>
+                                                    @Html.CheckBoxFor(m => m.List[count].Selected)
+                                                    @Html.DisplayFor(m => m.List[count].Text)
+                                                    <br />
+                                                    @if (Model.List[count].Selected)
+                                                    { str = "showtext"; }
+                                                    else
+                                                    { str = "hidetext"; }
+                                                    @Html.HiddenFor(m => m.List[count].Text)
+                                                    @Html.TextBoxFor(m => m.List[count].Value, new { @class = "form-control col-md-2 " + @str })
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        if (count % 3 == 2 || count == Model.List.Count() - 1)
+                                        {
+                                            @Html.Raw("</div>")
+                                        }
+                                        count = count + 1;
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript" language="javascript">
+        $(function () {
+            setTimeout(function () { $("#errorMessage").hide(); }, 10000);
+
+            var value = $('input[name=isYearly]:checked').val();
+            if (value == "Monthly") { $(".month-two").show(); }
+            else { $(".month-two").hide(); }
+
+            $("input[type=checkbox]").on("click", function (e) {
+                var checkboxId = $(this).attr("id");
+
+                if ($(this).prop('checked')) {
+                    var value = checkboxId.replace("Selected", "Value");
+                    $("#" + value).css("display", "block");
+                }
+                else {
+                    var value = checkboxId.replace("Selected", "Value");
+                    $("#" + value).css("display", "none");
+                }
+            });
+        });
+
+        $("#productName").autocomplete({
+
+            source: function (request, response) {
+                if (request.term.length >= 3) {
+                    $.ajax({
+                        url: '@Url.Action("Autocomplete","Products")',
+                        type: "GET",
+                        dataType: "json",
+                        data: { Prefix: request.term },
+                        success: function (data) {
+                            if (data != null) {
+                                response($.map(data, function (item) {
+                                    return {
+                                        label: item.Id + " - " + item.Name,
+                                        value: item.Id + " - " + item.Name,
+                                        id: item.Id
+                                    };
+                                }))
+                            }
+                        }
+                    })
+                }
+            },
+
+            select: function (event, ui) {
+                $("#productID").val(ui.item.id);
+            },
+        });
+
+        $(document).on("click", "#btnsearch", function () {
+            var productName = $("#productName").val();
+            if (productName == '') {
+                $("#productID").val('');
+            }
+
+            var value = $("#productID").val();
+            if (value != '' && value != null) {
+                window.location.href = "/Products/Forecasting?productID=" + value;
+            }
+        });
+
+        $(document).on("change", "#isYearly", function () {
+
+            var value = $('input[name=isYearly]:checked').val();
+            if (value == "Monthly") { $(".month-two").show(); }
+            else { $(".month-two").hide(); }
+
+        });
+
+    </script>
+}

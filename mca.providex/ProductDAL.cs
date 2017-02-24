@@ -13,7 +13,7 @@ using System.Dynamic;
 namespace mca.providex
 {
     public class ProductDAL : BaseClass
-    {
+    {     
         public List<ArrayList> GetItemByFilter(string filter, ProductEnums value)
         {
             List<ArrayList> List = new List<ArrayList> { };
@@ -55,7 +55,7 @@ namespace mca.providex
             string query = @"SELECT YEAR = YEAR(TRANSACTIONDATE), MONTH = MONTH(TRANSACTIONDATE), MMM = UPPER(LEFT(DATENAME(MONTH, TRANSACTIONDATE), 3))
                                 FROM IM_ITEMTRANSACTIONHISTORY WHERE ITEMCODE = @FILTER AND (TRANSACTIONDATE >= @STARTDATE AND TRANSACTIONDATE <= @ENDDATE)
                                 GROUP BY YEAR(TRANSACTIONDATE), MONTH(TRANSACTIONDATE), DATENAME(MONTH, TRANSACTIONDATE)
-                                ORDER BY YEAR DESC, MONTH DESC";
+                                ORDER BY YEAR ASC, MONTH ASC";
 
             List<dynamic> _data = this._db.Query<dynamic>(query, new { filter = filter, startdate = startdate, enddate = enddate }).ToList();
             foreach (var item in _data)
@@ -195,6 +195,6 @@ namespace mca.providex
             }
             _data = null;
             return model;
-        }
+        }       
     }
 }

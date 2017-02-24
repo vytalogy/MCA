@@ -4,22 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace mca.providex
 {    
-    public class CustomListItem
-    {
-        public string Value { get; set; }
-
-        public string Text { get; set; }
-    }
-
-
     public enum ProductEnums
     {
         SearchByItemCode = 1,
         SearchByItemCodeDesc = 2,
     }
-
 
     public class _ProductModel
     {
@@ -46,5 +38,5 @@ namespace mca.providex
         public string Customer2Qty { get; set; } = string.Empty;
         public string Customer3Qty { get; set; } = string.Empty;
         public string QuantityOnHand { get; set; }       
-    }
+    }   
 }
