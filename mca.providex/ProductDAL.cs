@@ -19,9 +19,15 @@ namespace mca.providex
             List<ArrayList> List = new List<ArrayList> { };
             string query = string.Empty;
             if (value == ProductEnums.SearchByItemCode)
-                query = @"select ItemCode,ItemCodeDesc from CI_Item where itemcode like @filter +'%' or ItemCodeDesc like '%' + @filter + '%'";
+                // query = @"select ItemCode,ItemCodeDesc from CI_Item where itemcode like @filter +'%' or ItemCodeDesc like '%' + @filter + '%'";
+                query = @"select distinct ItemCode,ItemCodeDesc from CI_Item item
+                        where item.ItemCode in (select ItemCode from IM_ItemWarehouse where WarehouseCode not in  ('FR', '0000', 'CHN', 'DCH','USA'))
+                        and (item.itemcode like @filter +'%' or item.ItemCodeDesc like '%' + @filter + '%')";
             else if (value == ProductEnums.SearchByItemCodeDesc)
-                query = @"select ItemCode,ItemCodeDesc from CI_Item where ItemCodeDesc like'%' + @filter + '%'";
+                //query = @"select ItemCode,ItemCodeDesc from CI_Item where ItemCodeDesc like'%' + @filter + '%'";
+                query = @"select distinct ItemCode,ItemCodeDesc from CI_Item item
+                          where item.ItemCode in (select ItemCode from IM_ItemWarehouse where WarehouseCode not in  ('FR', '0000', 'CHN', 'DCH','USA'))
+                          and item.ItemCodeDesc like '%' + @filter + '%'";
 
             List<dynamic> _data = this._db.Query<dynamic>(query, new { filter = filter }).ToList();
             if (_data != null && _data.Count() > 0)

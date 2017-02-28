@@ -115,7 +115,7 @@ namespace mca.web.Controllers
                 {
                     Selected = item.Selected,
                     Text = item.Text,
-                    Value = model.isYearly ? "3" : item.Value,
+                    Value = model.isYearly ? "3" : item.Value, //only 3 value assign when yearly is selected.
                 }));
             }
 
