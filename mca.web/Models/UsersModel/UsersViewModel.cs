@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace mca.web.Models
 {
@@ -22,15 +23,21 @@ namespace mca.web.Models
 
     public class RegistorViewModel
     {
+        public int id { set; get; }
+        [Required]
+        public string FirstName { set; get; }
+        [Required]
+        public string LastName { set; get; }
         [Required]
         [EmailAddress]
-        public String Email { set; get; }
+        public string UserName { set; get; }
         [Required]
-        public String Password { set; get; }
+        public string Password { set; get; }
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "Confirm password doesn't match, Type again !")]
+        public string ConfirmPassword { set; get; }
         [Required]
-        public String SecretQuestion { set; get; }
-        [Required]
-        public String SecretAnswer { set; get; }
+        public int RoleID { set; get; }
+        public List<SelectListItem> RolesList { set; get; }
     }
 
     #endregion

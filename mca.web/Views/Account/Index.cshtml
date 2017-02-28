@@ -1,0 +1,59 @@
+﻿@model  List<mca.model.User>
+
+@{
+    ViewBag.Title = "Users";
+    WebGrid WebGrid = new WebGrid(Model, null, null, 10);
+}
+
+<style type="text/css">
+    /*styles for altering rows*/
+    .wedgrid-header {
+        border: lightgray 1px solid;
+        border-radius: 2px;
+    }
+
+    .webgrid-row-style {
+        padding: 3px 7px 2px;
+    }
+
+    .webgrid-alternating-row {
+        background-color: lightgray;
+        padding: 3px 7px 2px;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="container">
+        <div class="row">
+            <h2>Users</h2>
+            <a href="@Url.Action("Create","Account")" class="btn btn-info" role="button">Create</a>           
+            <br /><br />
+            @if (Model != null && Model.Count() > 0)
+            {
+                @WebGrid.GetHtml(
+                tableStyle: "table table-responsive backcolor",
+                headerStyle: "wedgrid-header",
+                footerStyle: "webgrid-footer",
+                alternatingRowStyle: "webgrid-alternating-row",
+                rowStyle: "webgrid-row-style",
+                selectedRowStyle: "Grid-selected",
+                    mode: WebGridPagerModes.All,
+                    columns:
+                      WebGrid.Columns
+                      (
+                          WebGrid.Column(columnName: "FirstName", header: "First Name"),
+                          WebGrid.Column(columnName: "LastName", header: "Last Name"),
+                          WebGrid.Column(columnName: "UserName", header: "Email"),
+                          WebGrid.Column(columnName: "RoleName", header: "Role"),
+                          WebGrid.Column(header: "Is Active", format:@<text><input type="checkbox" checked="@item.Active" disabled="disabled" /></text>),
+                          WebGrid.Column(header: "Action", format:
+                        @<text>
+                            <a href='@Url.Action("Edit","Account",new { id =@item.id })' class="glyphicon glyphicon-pencil"></a> |                                 
+                            <a href='@Url.Action("Delete","Account",new { id =@item.id })' class="glyphicon glyphicon-trash"></a>
+                        </text>)
+                      )
+                  );
+            }
+        </div>
+    </div>
+</div>

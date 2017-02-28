@@ -8,93 +8,25 @@ using System.Threading.Tasks;
 using System.Data;
 using Dapper;
 
+
 namespace mca.dal
 {
     public class UserDAL : BaseDAL
     {
-        //public List<mca.model.User> GetAll(Boolean? Active = null)
-        //{
-        //    List<mca.model.User> _User = null;
-        //    SqlConnection conn = null;
-        //    try
-        //    {
-        //        conn = new System.Data.SqlClient.SqlConnection(this.conn);
-        //        SqlCommand cmd = new SqlCommand("UserGetAll", conn);
-        //        cmd.CommandType = CommandType.StoredProcedure;
+        public List<mca.model.User> GetAll(Boolean? Active = null)
+        {
+            List<mca.model.User> _User = new List<User> { };
+            try
+            {               
+                _User = this._db.Query<User>("UserGetAll", commandType: CommandType.StoredProcedure).ToList();
+                return _User;
+            }
+            catch(Exception exe) { }
 
-        //        SqlParameter _SqlParameterActive = new SqlParameter("@Active", SqlDbType.Bit);
-        //        _SqlParameterActive.Value = Active;
-        //        cmd.Parameters.Add(_SqlParameterActive);
-
-        //        DataSet ds = new DataSet();
-        //        SqlDataAdapter _SqlDataAdapter = new SqlDataAdapter(cmd);
-        //        conn.Open();
-        //        _SqlDataAdapter.Fill(ds);
-        //        _User = mca.utility.Utilities.ConvertToList<mca.model.User>(ds.Tables[0]);
-        //        conn.Close();
-        //    }
-        //    catch (SqlException ex)
-        //    {
-        //       // DAL.Utilities.SaveException(ex);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //     //   DAL.Utilities.SaveException(ex);
-        //    }
-        //    finally
-        //    {
-        //        if (conn.State == ConnectionState.Open)
-        //            conn.Close();
-        //        conn = null;
-        //    }
-        //    return _User == null ? new List<mca.model.User>() : _User;
-        //}
-        //public List<mca.model.User> GetAll(Roles _Role, Boolean? Active = null)
-        //{
-        //    List<mca.model.User> _User = null;
-        //    SqlConnection conn = null;
-        //    try
-        //    {
-        //        conn = new System.Data.SqlClient.SqlConnection(this.conn);
-        //        SqlCommand cmd = new SqlCommand("UserGetAllByRoles", conn);
-        //        cmd.CommandType = CommandType.StoredProcedure;
-
-        //        SqlParameter _SqlParameterRole = new SqlParameter("@Role", SqlDbType.VarChar);
-        //        _SqlParameterRole.Value = _Role;
-        //        cmd.Parameters.Add(_SqlParameterRole);
-
-
-        //        SqlParameter _SqlParameterActive = new SqlParameter("@Active", SqlDbType.Bit);
-        //        if (Active == null)
-        //            _SqlParameterActive.Value = System.DBNull.Value;
-        //        else
-        //            _SqlParameterActive.Value = Active;
-        //        cmd.Parameters.Add(_SqlParameterActive);
-
-        //        DataSet ds = new DataSet();
-        //        SqlDataAdapter _SqlDataAdapter = new SqlDataAdapter(cmd);
-        //        conn.Open();
-        //        _SqlDataAdapter.Fill(ds);
-        //        _User = mca.utility.Utilities.ConvertToList<mca.model.User>(ds.Tables[0]);
-        //        conn.Close();
-        //    }
-        //    catch (SqlException ex)
-        //    {
-        //        //mca.utility.Utilities.SaveException(ex);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        //DAL.Utilities.SaveException(ex);
-        //    }
-        //    finally
-        //    {
-        //        if (conn.State == ConnectionState.Open)
-        //            conn.Close();
-        //        conn = null;
-        //    }
-        //    return _User == null ? new List<mca.model.User> () : _User;
-        //}
-        public mca.model.User Get(String userName, String password,out string erroMsg)
+            return _User;
+        }
+                
+        public mca.model.User Get(string userName, String password,out string erroMsg)
         {
             erroMsg = string.Empty;
             try
@@ -105,287 +37,157 @@ namespace mca.dal
                     userName = userName,
                     password = password
                 }, commandType: CommandType.StoredProcedure).FirstOrDefault();
-                return _data;
 
+                if (_data != null)
+                {
+                    _data.NoOfLogin = _data.NoOfLogin + 1;
+                    query = "UPDATE [User] SET [LastLogin]=@LastLogin ,[NoOfLogin]=@NoOfLogin WHERE [id]=@ID";
+                    this._db.Query(query, new
+                    {
+                        LastLogin = DateTime.Now,
+                        NoOfLogin = _data.NoOfLogin,
+                        ID = _data.id
+                    }, commandType: CommandType.Text);
+                }
+
+                return _data;
             }
-            catch(Exception exe)
+            catch (Exception exe)
             {
                 erroMsg = exe.Message;
             }
             return null; 
         }
 
-        //public mca.model.User Get(String UID)
-        //{
-        //    mca.model.User _User = null;
-        //    SqlConnection conn = null;
-        //    try
-        //    {
-        //        conn = new System.Data.SqlClient.SqlConnection(this.conn);
-        //        SqlCommand cmd = new SqlCommand("UserGetByUID", conn);
-        //        cmd.CommandType = CommandType.StoredProcedure;
+        public List<SelectList> GetRoles()
+        {
+            try
+            {
+                string query = @"select Value = id, Text = RoleName From Roles";
+                return this._db.Query<SelectList>(query).ToList();                             
+            }
+            catch (Exception exe)
+            {
+            }
+            return null;
+        }
+       
+        public mca.model.User GetByUserId(int? UserId)
+        {
+            try
+            {
+                mca.model.User _user;
+                string query = @"UserGetByID";
+                _user = this._db.Query<mca.model.User>(query, new
+                {
+                    id = UserId,
+                }, commandType: CommandType.StoredProcedure).FirstOrDefault();
 
-        //        SqlParameter _SqlParameterUserName = new SqlParameter("@UserName", SqlDbType.VarChar);
-        //        _SqlParameterUserName.Value = UID;
-        //        cmd.Parameters.Add(_SqlParameterUserName);
+                return _user;
+            }
+            catch (SqlException ex)
+            {
+            }
 
-        //        DataSet ds = new DataSet();
-        //        SqlDataAdapter _SqlDataAdapter = new SqlDataAdapter(cmd);
-        //        conn.Open();
-        //        _SqlDataAdapter.Fill(ds);
-        //        _User = mca.utility.Utilities.ConvertToEntity<mca.model.User>(ds.Tables[0]);
-        //        conn.Close();
-        //    }
-        //    catch (SqlException ex)
-        //    {
-        //       // DAL.Utilities.SaveException(ex);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //     //   DAL.Utilities.SaveException(ex);
-        //    }
-        //    finally
-        //    {
-        //        if (conn.State == ConnectionState.Open)
-        //            conn.Close();
-        //        conn = null;
-        //    }
-        //    return _User;
-        //}
-        //public mca.model.User Get(int UserId)
-        //{
-        //    mca.model.User _User = null;
-        //    SqlConnection conn = null;
-        //    try
-        //    {
-        //        conn = new System.Data.SqlClient.SqlConnection(this.conn);
-        //        SqlCommand cmd = new SqlCommand("UserGetByID", conn);
-        //        cmd.CommandType = CommandType.StoredProcedure;
+            return null;
+        }
+        public bool Create(mca.model.User _User,out string errorMsg)
+        {
+            errorMsg = string.Empty;                     
+            try
+            {
+                string query = @"Insert into [User] (FirstName,LastName,UserName,Password,NoOfLogin,CreatedBy,CreatedOn,Active)
+                               Values (@FirstName,@LastName,@UserName,@Password,@NoOfLogin,@CreatedBy,@CreatedOn,@Active) SELECT SCOPE_IDENTITY()";
 
-        //        SqlParameter _SqlParameterID = new SqlParameter("@id",SqlDbType.Int);
-        //        _SqlParameterID.Value = UserId;
-        //        cmd.Parameters.Add(_SqlParameterID);
+                int userId = this._db.ExecuteScalar<int>(query, new
+                {
+                    FirstName = _User.FirstName,
+                    LastName = _User.LastName,
+                    UserName = _User.UserName,
+                    Password = _User.Password,
+                    NoOfLogin =0,
+                    CreatedBy = _User.CreatedBy,
+                    CreatedOn = DateTime.Now,
+                    Active = true,
+                }, commandType: CommandType.Text);
 
-        //        DataSet ds = new DataSet();
-        //        SqlDataAdapter _SqlDataAdapter = new SqlDataAdapter(cmd);
-        //        conn.Open();
-        //        _SqlDataAdapter.Fill(ds);
-        //        _User = mca.utility.Utilities.ConvertToEntity<mca.model.User>(ds.Tables[0]);
-        //        conn.Close();
-        //    }
-        //    catch (SqlException ex)
-        //    {
-        //       // DAL.Utilities.SaveException(ex);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        //DAL.Utilities.SaveException(ex);
-        //    }
-        //    finally
-        //    {
-        //        if (conn.State == ConnectionState.Open)
-        //            conn.Close();
-        //        conn = null;
-        //    }
-        //    return _User;
-        //}
-        //public int Add(mca.model.User _User)
-        //{
-        //    int returnVal = -1;
-        //    SqlConnection conn = null;
-        //    try
-        //    {
-        //        conn = new System.Data.SqlClient.SqlConnection(this.conn);
-        //        SqlCommand cmd = new SqlCommand("UserAdd", conn);
-        //        cmd.CommandType =CommandType.StoredProcedure;
+                query = @"Insert into [UserRoles] (UserId,RoleId) Values (@UserId,@RoleId) SELECT SCOPE_IDENTITY()";
+                int value = this._db.ExecuteScalar<int>(query, new
+                {
+                    UserId = userId,
+                    RoleId = _User.RoleID,
+                   
+                }, commandType: CommandType.Text);
 
-        //        SqlParameter _SqlParameterUserName = new SqlParameter("@UserName", SqlDbType.VarChar);
-        //        _SqlParameterUserName.Value = _User.UserName;
-        //        cmd.Parameters.Add(_SqlParameterUserName);
+            }
+            catch (SqlException ex)
+            {
+                errorMsg = string.Empty;
+                return false;
+            }
+           
+            return true;
+        }
+        
+        public bool Update(mca.model.User _User,out string errorMsg)
+        {
+            errorMsg = string.Empty;
+            try
+            {
+                string query = @"Update [User] 
+                                Set FirstName = @FirstName,
+                                LastName = @LastName,
+                                UserName = @UserName                               
+                                where id = @userId";
 
-        //        //SqlParameter _SqlParameterEmail = new SqlParameter("@Email",SqlDbType.VarChar);
-        //        //_SqlParameterEmail.Value = _User.Email;
-        //        //cmd.Parameters.Add(_SqlParameterEmail);
+                this._db.ExecuteScalar<int>(query, new
+                {
+                    FirstName = _User.FirstName,
+                    LastName = _User.LastName,
+                    UserName = _User.UserName,                 
+                    UserId = _User.id,
+                }, commandType: CommandType.Text);
 
-        //        SqlParameter _SqlParameterPassword = new SqlParameter("@Password", SqlDbType.VarChar);
-        //        _SqlParameterPassword.Value = _User.Password;
-        //        cmd.Parameters.Add(_SqlParameterPassword);                
+                query = @"delete from [UserRoles] where UserId=@UserId";
+                this._db.Query(query,new { UserId = _User.id, });
 
-        //        //SqlParameter _SqlParameterCreatedBy = new SqlParameter("@CreatedBy",SqlDbType.Int);
-        //        //_SqlParameterCreatedBy.Value = _User.CreatedBy;
-        //        //cmd.Parameters.Add(_SqlParameterCreatedBy);
+                query = @"Insert into [UserRoles] (UserId,RoleId) Values (@UserId,@RoleId) SELECT SCOPE_IDENTITY()";
+                int value = this._db.ExecuteScalar<int>(query, new
+                {
+                    UserId = _User.id,
+                    RoleId = _User.RoleID,
 
-        //        SqlParameter _SqlParameterActive = new SqlParameter("@Active", SqlDbType.Bit);
-        //        _SqlParameterActive.Value = _User.Active;
-        //        cmd.Parameters.Add(_SqlParameterActive);
+                }, commandType: CommandType.Text);
 
-        //        conn.Open();
-        //        returnVal = Convert.ToInt16(cmd.ExecuteScalar());
-        //        conn.Close();
-        //    }
-        //    catch (SqlException ex)
-        //    {
-        //       // DAL.Utilities.SaveException(ex);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //       // DAL.Utilities.SaveException(ex);
-        //    }
-        //    finally
-        //    {
-        //        if (conn.State == ConnectionState.Open)
-        //            conn.Close();
-        //        conn = null;
-        //    }
-        //    return returnVal;
-        //}
-        //public int ResetPassword(int id, String newPassword)
-        //{
-        //    int returnVal = -1;
-        //    SqlConnection conn = null;
-        //    try
-        //    {
-        //        conn = new System.Data.SqlClient.SqlConnection(this.conn);
-        //        SqlCommand cmd = new SqlCommand("ResetPassword", conn);
-        //        cmd.CommandType = CommandType.StoredProcedure;
+            }
+            catch (SqlException ex)
+            {
+                errorMsg = string.Empty;
+                return false;
+            }
 
-        //        SqlParameter _SqlParameterID = new SqlParameter("@id", SqlDbType.Int);
-        //        _SqlParameterID.Value = id;
-        //        cmd.Parameters.Add(_SqlParameterID);
+            return true;
+        }
 
-        //        SqlParameter _SqlParameterOldPassword = new SqlParameter("@OldPassword", SqlDbType.VarChar);
-        //        _SqlParameterOldPassword.Value = DBNull.Value;
-        //        cmd.Parameters.Add(_SqlParameterOldPassword);
+        public bool Delete(int? UserId)
+        {           
+            try
+            {
+                string query = @"delete from [UserRoles] where UserId=@UserId";
+                this._db.Query(query, new { UserId = UserId, });
 
-        //        SqlParameter _SqlParameternewPassword = new SqlParameter("@newPassword", SqlDbType.VarChar);
-        //        _SqlParameternewPassword.Value = newPassword;
-        //        cmd.Parameters.Add(_SqlParameternewPassword);
+                query = @"delete from [User] where id = @userId";
+                this._db.Query(query, new
+                {                   
+                    UserId = UserId,
+                }, commandType: CommandType.Text);                
+            }
+            catch (SqlException ex)
+            {               
+                return false;
+            }
 
-
-        //        conn.Open();
-        //        returnVal = Convert.ToInt16(cmd.ExecuteScalar());
-        //        conn.Close();
-        //    }
-        //    catch (SqlException ex)
-        //    {
-        //        //DAL.Utilities.SaveException(ex);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        //DAL.Utilities.SaveException(ex);
-        //    }
-        //    finally
-        //    {
-        //        if (conn.State == ConnectionState.Open)
-        //            conn.Close();
-        //        conn = null;
-        //    }
-        //    return returnVal;
-        //}
-        //public int ResetPassword(int id, String oldPassword, String newPassword)
-        //{
-        //    int returnVal = -1;
-        //    SqlConnection conn = null;
-        //    try
-        //    {
-        //        conn = new System.Data.SqlClient.SqlConnection(this.conn);
-        //        SqlCommand cmd = new SqlCommand("ResetPassword", conn);
-        //        cmd.CommandType = CommandType.StoredProcedure;
-
-        //        SqlParameter _SqlParameterID = new SqlParameter("@id", SqlDbType.Int);
-        //        _SqlParameterID.Value = id;
-        //        cmd.Parameters.Add(_SqlParameterID);
-
-        //        SqlParameter _SqlParameterOldPassword = new SqlParameter("@OldPassword", SqlDbType.VarChar);
-        //        _SqlParameterOldPassword.Value = oldPassword;
-        //        cmd.Parameters.Add(_SqlParameterOldPassword);
-
-        //        SqlParameter _SqlParameternewPassword = new SqlParameter("@newPassword", SqlDbType.VarChar);
-        //        _SqlParameternewPassword.Value = newPassword;
-        //        cmd.Parameters.Add(_SqlParameternewPassword);
-
-
-        //        conn.Open();
-        //        returnVal = Convert.ToInt16(cmd.ExecuteScalar());
-        //        conn.Close();
-        //    }
-        //    catch (SqlException ex)
-        //    {
-        //       // DAL.Utilities.SaveException(ex);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //       // DAL.Utilities.SaveException(ex);
-        //    }
-        //    finally
-        //    {
-        //        if (conn.State == ConnectionState.Open)
-        //            conn.Close();
-        //        conn = null;
-        //    }
-        //    return returnVal;
-        //}
-        //public int Update(mca.model.User _User)
-        //{
-        //    int returnVal = -1;
-        //    SqlConnection conn = null;
-        //    try
-        //    {
-        //        conn = new System.Data.SqlClient.SqlConnection(this.conn);
-        //        SqlCommand cmd = new SqlCommand("UserUpdate", conn);
-        //        cmd.CommandType = CommandType.StoredProcedure;
-
-        //        SqlParameter _SqlParameterID = new SqlParameter("@id", SqlDbType.Int);
-        //        _SqlParameterID.Value = _User.id;
-        //        cmd.Parameters.Add(_SqlParameterID);
-
-        //        //SqlParameter _SqlParameterUserName = new SqlParameter("@UserName", System.Data.SqlDbType.VarChar);
-        //        //_SqlParameterUserName.Value = _User.UserName;
-        //        //cmd.Parameters.Add(_SqlParameterUserName);
-
-        //        //SqlParameter _SqlParameterEmail = new SqlParameter("@Email", System.Data.SqlDbType.VarChar);
-        //        //_SqlParameterEmail.Value = _User.Email;
-        //        //cmd.Parameters.Add(_SqlParameterEmail);
-
-        //        SqlParameter _SqlParameterPassword = new SqlParameter("@Password", SqlDbType.VarChar);
-        //        _SqlParameterPassword.Value = _User.Password;
-        //        cmd.Parameters.Add(_SqlParameterPassword);
-
-        //        //SqlParameter _SqlParameterRoles = new SqlParameter("@Roles", System.Data.SqlDbType.VarChar);
-        //        //_SqlParameterRoles.Value = _User.Roles;
-        //        //cmd.Parameters.Add(_SqlParameterRoles);
-
-        //        //SqlParameter _SqlParameterSecretQuestion = new SqlParameter("@SecretQuestion", SqlDbType.VarChar);
-        //        //_SqlParameterSecretQuestion.Value = _User.SecretQuestion;
-        //        //cmd.Parameters.Add(_SqlParameterSecretQuestion);
-
-        //        //SqlParameter _SqlParameterSecretAnswer = new SqlParameter("@SecretAnswer", SqlDbType.VarChar);
-        //        //_SqlParameterSecretAnswer.Value = _User.SecretAnswer;
-        //        //cmd.Parameters.Add(_SqlParameterSecretAnswer);
-
-        //        SqlParameter _SqlParameterActive = new SqlParameter("@Active", SqlDbType.Bit);
-        //        _SqlParameterActive.Value = _User.Active;
-        //        cmd.Parameters.Add(_SqlParameterActive);
-
-        //        conn.Open();
-        //        returnVal = Convert.ToInt16(cmd.ExecuteScalar());
-        //        conn.Close();
-        //    }
-        //    catch (SqlException ex)
-        //    {
-        //        //DAL.Utilities.SaveException(ex);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        //DAL.Utilities.SaveException(ex);
-        //    }
-        //    finally
-        //    {
-        //        if (conn.State == ConnectionState.Open)
-        //            conn.Close();
-        //        conn = null;
-        //    }
-        //    return returnVal;
-        //}     
+            return true;
+        }
     }
 }

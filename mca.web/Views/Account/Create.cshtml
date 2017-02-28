@@ -1,0 +1,48 @@
+﻿@model mca.web.Models.RegistorViewModel
+@{
+    ViewBag.Title = "Create";
+
+}
+
+@using (Html.BeginForm("Create", "Account"))
+{
+<div class="container-fluid">
+    <div class="container">
+        <div class="row">
+            <h2>Create</h2>
+            <div class="row">
+                First Name : @Html.TextBoxFor(m => m.FirstName)
+                @Html.ValidationMessageFor(m => m.FirstName)
+            </div>
+            <div class="row">
+                Last Name : @Html.TextBoxFor(m => m.LastName)
+                @Html.ValidationMessageFor(m => m.LastName)
+            </div>
+
+            <div class="row">
+                Email : @Html.TextBoxFor(m => m.UserName)
+                @Html.ValidationMessageFor(m => m.UserName)
+            </div>
+
+            <div class="row">
+                Password : @Html.PasswordFor(m => m.Password)
+                @Html.ValidationMessageFor(m => m.Password)
+            </div>
+
+            <div class="row">
+                Confirm Password : @Html.PasswordFor(m => m.ConfirmPassword)
+                @Html.ValidationMessageFor(m => m.ConfirmPassword)
+            </div>
+
+            <div class="row">
+                Role : @Html.DropDownListFor(m => m.RoleID, Model.RolesList, "Select")
+                @Html.ValidationMessageFor(m => m.RoleID)
+            </div>
+            <div class="button">
+                <button type="submit" class="button">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
