@@ -6,37 +6,34 @@ using System.Threading.Tasks;
 
 
 namespace mca.providex
-{    
-    public enum ProductEnums
+{   
+    public class ProductDataModel
     {
-        SearchByItemCode = 1,
-        SearchByItemCodeDesc = 2,
+        public List<ProductDataItem> Items { get; set; }
     }
 
-    public class _ProductModel
+    public class ProductDataItem
     {
-        public List<_ProductItem> Items { get; set; }
-    }
-
-    public class _ProductItem
-    {
-        public string MonthYear { get; set; }
-        public string TotalOnHand { get; set; }
+        public string MonthYear { get; set; }      
         public string TopCustomer1 { get; set; } = string.Empty;
-        public string TopCustomer1Qty { get; set; } = string.Empty;
+        public decimal TopCustomer1Qty { get; set; } = 0;
         public string TopCustomer2 { get; set; } = string.Empty;
-        public string TopCustomer2Qty { get; set; } = string.Empty;
+        public decimal TopCustomer2Qty { get; set; } = 0;
         public string TopCustomer3 { get; set; } = string.Empty;
-        public string TopCustomer3Qty { get; set; } = string.Empty;
-        public List<_ProductDetail> Items { get; set; }
+        public decimal TopCustomer3Qty { get; set; } = 0;
+        public List<ProductDataLineItem> Items { get; set; }
     }
 
-    public class _ProductDetail
+    public class ProductDataLineItem
     {      
         public string WarehouseCode { get; set; }
-        public string Customer1Qty { get; set; } = string.Empty;
-        public string Customer2Qty { get; set; } = string.Empty;
-        public string Customer3Qty { get; set; } = string.Empty;
-        public string QuantityOnHand { get; set; }       
-    }   
+        public decimal Customer1Qty { get; set; } = 0;
+        public decimal Customer2Qty { get; set; } = 0;
+        public decimal Customer3Qty { get; set; } = 0;
+        public decimal QuantityOnHand { get; set; } = 0;
+        public decimal Transfer { get; set; } = 0;
+        public decimal ShippedQuantity { get; set; } = 0;
+        public decimal PurhaseOrder { get; set; } = 0;
+    }
+    
 }

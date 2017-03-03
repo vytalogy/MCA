@@ -39,11 +39,11 @@ namespace mca.web.Helpers
             }
         }
 
-        public static string UserName
+        public static string Email
         {
             get
             {
-                return HttpContext.Current.Session["UserName"].ConvertToString();
+                return HttpContext.Current.Session["Email"].ConvertToString();
             }
         }      
 

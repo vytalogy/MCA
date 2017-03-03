@@ -14,52 +14,61 @@ namespace mca.web.Controllers
     [Restricted]
     public class ProductsController : Controller
     {
+        [OutputCache(Duration = 30, VaryByParam = "none")]
         [HttpGet]
         public ActionResult Home()
         {
             return View();
         }
 
+        [OutputCache(Duration = 30, VaryByParam = "none")]
         [HttpGet]
         public ActionResult Search()
         {
             return View();
         }
 
+        [OutputCache(Duration = 30, VaryByParam = "none")]
         [HttpGet]
         public ActionResult Selector()
-        {                       
+        {
             return View();
         }
-
+                
         [HttpGet]
         public ActionResult Detail(string productID)
         {
-            ProductDAL _product = new ProductDAL { };
-            dynamic _productDetail = _product.GetItemDetail(productID);
-            ProductDetailModel model = new ProductDetailModel { Items = new List<mca.web.Models._ProductItem> { } };
+            //ProductRepository _repository2 = new ProductRepository { };
+            //var Item = _repository2.GetItemWareHouseDetail("MCSDRY1S", "FEB", "2016");
+            //return View();
+
+            ProductRepository _repository = new ProductRepository { };
+            dynamic _productDetail = _repository.GetItemDetail(productID);
+            ProductViewModel model = new ProductViewModel { Items = new List<ProductViewItem> { } };
             model.ProductId = _productDetail.CI_Item;
             model.Description = !string.IsNullOrEmpty(_productDetail.ItemCodeDesc) ? _productDetail.ItemCodeDesc : "";
-            model.Brand = !string.IsNullOrEmpty(_productDetail.UDF_BRAND) ? _productDetail.UDF_BRAND : "None";
-
-            var SubItems = _product.GetItemWareHouse(productID);
-            model.Items.AddRange(SubItems.Items.Select(item => new mca.web.Models._ProductItem
+            model.Brand = !string.IsNullOrEmpty(_productDetail.UDF_BRAND) ? _productDetail.UDF_BRAND : "None";          
+            
+            var SubItems = _repository.GetItemWareHouse(productID);
+            model.Items.AddRange(SubItems.Items.Select(item => new ProductViewItem
             {
                 MonthYear = item.MonthYear,
-                TotalOnHand = item.TotalOnHand,
                 TopCustomer1 = item.TopCustomer1,
                 TopCustomer1Qty = item.TopCustomer1Qty,
                 TopCustomer2 = item.TopCustomer2,
                 TopCustomer2Qty = item.TopCustomer2Qty,
                 TopCustomer3 = item.TopCustomer3,
                 TopCustomer3Qty = item.TopCustomer3Qty,
-                Items = item.Items.Select(subItem => new mca.web.Models._ProductDetail
+                Items = item.Items.Select(subItem => new ProductViewLineItem
                 {
                     Customer1Qty = subItem.Customer1Qty,
                     Customer2Qty = subItem.Customer2Qty,
                     Customer3Qty = subItem.Customer3Qty,
                     WarehouseCode = subItem.WarehouseCode,
-                    QuantityOnHand = $"{subItem.QuantityOnHand.ConvertToDecimal():0}",
+                    Transfer = subItem.Transfer,
+                    ShippedQuantity = subItem.ShippedQuantity,
+                    PurhaseOrder = subItem.PurhaseOrder,
+                    QuantityOnHand = subItem.QuantityOnHand,
                 }).ToList(),
             }));
 
@@ -67,16 +76,17 @@ namespace mca.web.Controllers
             return View(model);
         }
 
+        [OutputCache(Duration = 30, VaryByParam = "productID")]
         [HttpGet]
         public ActionResult Forecasting(string productID)
         {
             TempData["alert"] = "Oop";
-            ProductDAL _product = new ProductDAL { };
-            ProductUpdateModel model = new ProductUpdateModel { isDataFound = false };
+            ProductRepository _product = new ProductRepository { };
+            ProductForcastingModel model = new ProductForcastingModel { isDataFound = false };
             if (!string.IsNullOrEmpty(productID))
             {
                 dynamic _productDetail = _product.GetItemDetail(productID);
-                model = new ProductUpdateModel { };
+                model = new ProductForcastingModel { };
                 model.ProductId = _productDetail.CI_Item;
                 model.Description = !string.IsNullOrEmpty(_productDetail.ItemCodeDesc) ? _productDetail.ItemCodeDesc : "";
                 model.Brand = !string.IsNullOrEmpty(_productDetail.UDF_BRAND) ? _productDetail.UDF_BRAND : "None";
@@ -89,23 +99,23 @@ namespace mca.web.Controllers
                     model.List.Add(new SelectListItem { Selected = false, Text = currentmont, Value = string.Empty });
                 }
             }
-            
+
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult Forecasting(ProductUpdateModel _data)
+        public ActionResult Forecasting(ProductForcastingModel _data)
         {
-            mca.model.ProductUpdateDataModel model = new mca.model.ProductUpdateDataModel
+            mca.model.ProductUpdateDataModel model = new ProductUpdateDataModel
             {
                 ProductCode = _data.ProductId,
                 Description = _data.Description,
                 isYearly = _data.isYearly == "Annual" ? true : false,
                 Defaultvalue = _data.Defaultvalue,
                 CreatedBy = Auth.UserID,
-                CreatedByName = Auth.UserName,
+                CreatedByName = Auth.Email,
                 ModifyBy = Auth.UserID,
-                ModifyByName = Auth.UserName,
+                ModifyByName = Auth.Email,
             };
 
             model.List = new List<mca.model.SelectList> { };
@@ -130,6 +140,7 @@ namespace mca.web.Controllers
             return View(_data);
         }
 
+        [OutputCache(Duration = 30, VaryByParam = "none")]
         [HttpGet]
         public ActionResult Analytics()
         {
@@ -142,18 +153,37 @@ namespace mca.web.Controllers
             if (string.IsNullOrEmpty(Prefix))
                 return null;
 
-            ProductDAL _product = new ProductDAL { };
-            var EmpDet = _product.GetItemByFilter(Prefix, ProductEnums.SearchByItemCode).Select(s => new { Name = s[1].ConvertToString(), Id = s[0].ConvertToString() });
-            return Json(EmpDet, JsonRequestBehavior.AllowGet);
+            ProductRepository _product = new ProductRepository { };
+            var Item = _product.GetItemByFilter(Prefix, CustomEnum.SearchByItemCode).Select(s => new
+            {
+                Name = s[1].ConvertToString(),
+                Id = s[0].ConvertToString()
+            });
+
+            return Json(Item, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
-        public PartialViewResult _ProductFilter(string filter,string Header)
+        public PartialViewResult _ProductFilter(string filter, string Header)
         {
             ViewBag.Header = Header;
-            ProductDAL _product = new ProductDAL();
-            var EmpDet = _product.GetItemByFilter(filter, ProductEnums.SearchByItemCodeDesc).Select(s => new SelectListItem { Text = s[1].ConvertToString(), Value = s[0].ConvertToString() });
-            return PartialView(EmpDet);
+            ProductRepository _product = new ProductRepository();
+            var Item = _product.GetItemByFilter(filter, CustomEnum.SearchByItemCodeDesc).Select(s => new SelectListItem
+            {
+                Text = s[1].ConvertToString(),
+                Value = s[0].ConvertToString()
+            });
+
+            return PartialView(Item);
+        }
+
+        [OutputCache(Duration = 30, VaryByParam = "itemCode;Month;Year;")]
+        [HttpGet]
+        public PartialViewResult _GetItemWareHouseDetail(string itemCode, string Month, string Year)
+        {
+            ProductRepository _repository = new ProductRepository { };
+            var Item = _repository.GetItemWareHouseDetail(itemCode, Month,Year);
+            return PartialView(Item);
         }
     }
 }

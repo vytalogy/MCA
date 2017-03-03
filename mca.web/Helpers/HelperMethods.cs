@@ -270,56 +270,57 @@ namespace mca.web.Helpers
             catch { return str; }
         }
 
-        public static string GetMonthName(this string str)
+        public static string VectorValue(this object expression)
         {
+            string str = string.Empty;
             try
-            {
-                if (!string.IsNullOrEmpty(str))
+            {                              
+                if (expression != null)
                 {
-                    switch (str)
+                    System.Type type = expression.GetType();
+
+                    if (expression.GetType() == typeof(int) || expression.GetType() == typeof(long))
                     {
-                        case "1":
-                           return "Jan";  
-                                                      
-                        case "2":
-                            return  "Feb";                           
+                        var value = expression.ConvertToLong();
+                        if (value >= 0)
+                        {
+                            str = string.Format("{0:N0}", value);
+                        }
+                        else
+                        {
+                            str = "(" + string.Format("{0:N0}", value) + ")";
+                            str = str.Replace("-", "");
+                        }
+                    }                    
+                    else if (expression.GetType() == typeof(float) || expression.GetType() == typeof(double))
+                    {
+                        var value = expression.ConvertToDouble();
+                        if (value >= 0)
+                        {
+                            str = string.Format("{0:N0}", value);
+                        }
+                        else
+                        {
+                            str = "(" + string.Format("{0:N0}", value) + ")";
+                            str = str.Replace("-", "");
+                        }
 
-                        case "3":
-                            return "Mar";                           
-
-                        case "4":
-                            return "Apr";                            
-
-                        case "5":
-                            return "May";                           
-
-                        case "6":
-                            return "Jun";                          
-
-                        case "7":
-                            return "Jul";                    
-
-                        case "8":
-                            return "Aug";
-                                                        
-                        case "9":
-                            return "Sep";                          
-
-                        case "10":
-                            return "Oct";                          
-
-                        case "11":
-                            return "Nov";                           
-
-                        case "12":
-                            return "Dec";                            
-
-                        default:
-                            { return ""; }
-                    }                   
+                    }
+                    else if (expression.GetType() == typeof(decimal))
+                    {
+                        var value = expression.ConvertToDecimal();
+                        if (value >= 0)
+                        {
+                            str = string.Format("{0:N0}", value);
+                        }
+                        else
+                        {
+                            str = "(" + string.Format("{0:N0}", value) + ")";
+                            str = str.Replace("-", "");
+                        }
+                    }
                 }
-                else
-                    return str;
+                return str;           
             }
             catch { return str; }
         }

@@ -273,6 +273,7 @@
     <Content Include="Images\1.jpg" />
     <Content Include="Images\404.png" />
     <Content Include="Images\checked.png" />
+    <Content Include="Images\loading.gif" />
     <Content Include="Images\login-bg-2.jpg" />
     <Content Include="Images\logo-png.png" />
     <Content Include="Images\logo.jpg" />
@@ -329,6 +330,7 @@
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Account\Edit.cshtml" />
     <Content Include="Views\Account\Create.cshtml" />
+    <Content Include="Views\Products\_GetItemWareHouseDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

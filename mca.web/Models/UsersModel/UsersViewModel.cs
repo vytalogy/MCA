@@ -30,7 +30,7 @@ namespace mca.web.Models
         public string LastName { set; get; }
         [Required]
         [EmailAddress]
-        public string UserName { set; get; }
+        public string Email { set; get; }
         [Required]
         public string Password { set; get; }
         [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "Confirm password doesn't match, Type again !")]

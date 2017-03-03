@@ -1,4 +1,4 @@
-﻿@model mca.web.Models.ProductDetailModel
+﻿@model mca.web.Models.ProductViewModel
 
 @{
     ViewBag.Title = "Product Detail";
@@ -17,7 +17,7 @@
                         <li><a href="@Url.Action("Home")">Home</a></li>
                         <li><a href="@Url.Action("Search")">Product Search</a></li>
                         <li><a href="@Url.Action("Selector")">Product Selector</a></li>
-                        <li class="active"><a href="@Url.Action("Detail", new { productID = ViewBag.productID })">Product Detail</a></li>
+                        <li class="active"><a href="@Url.Action("Detail", new { productID = Model.ProductId })">Product Detail</a></li>
                     </ol>
                 </div>
             </div>
@@ -27,8 +27,8 @@
         <div class="container container-bg page-height">
             <div class="row">
                 <div class="modelbox-table">
-                    <div style="overflow-x:auto;">
-                        <table>
+                    <div class="">
+                        <table class="table">
                             <tr>
                                 <th>Model Number</th>
                                 <th>Description</th>
@@ -49,7 +49,10 @@
                                 @{int count = 1; string str = string.Empty; }
                                 @foreach (var item in Model.Items)
                                 {
-                                    decimal value = (item.TopCustomer1Qty.ConvertToDecimal() + item.TopCustomer2Qty.ConvertToDecimal() + item.TopCustomer3Qty.ConvertToDecimal());
+                                    decimal _totaltransfer = ((item.Items.Where(w => w.Transfer < 0).Select(s => s.Transfer).Sum()) + (item.Items.Where(w => w.Transfer > 0).Select(s => s.Transfer).Sum()));
+                                    decimal _totalshipped = ((item.Items.Where(w => w.ShippedQuantity < 0).Select(s => s.ShippedQuantity).Sum()) + (item.Items.Where(w => w.ShippedQuantity > 0).Select(s => s.ShippedQuantity).Sum()));
+                                    decimal _totalPurhaseOrder = item.Items.Where(w => w.PurhaseOrder > 0).Select(s => s.PurhaseOrder).Sum();
+                                    decimal _totalOnHand = item.Items.Where(w => w.QuantityOnHand > 0).Select(s => s.QuantityOnHand).Sum();
 
                                     <thead>
                                         <tr>
@@ -75,21 +78,26 @@
                                             str = "first-row";
                                         }
                                         else { str = "second-row"; }
-                                        
+
                                         <tr data-toggle="" id="@str" data-target=".demo1" class="accordion-toggle shrow mytr">
                                             <td>@item.MonthYear</td>
                                             <td>Total</td>
-                                            <td>@item.TotalOnHand</td>
-                                            <td>@item.TopCustomer1Qty.Split('.')[0]</td>
-                                            <td>@item.TopCustomer2Qty.Split('.')[0]</td>
-                                            <td>@item.TopCustomer3Qty.Split('.')[0]</td>
+                                            <td>@_totalOnHand.VectorValue()</td>
+                                            <td>@item.TopCustomer1Qty.VectorValue()</td>
+                                            <td>@item.TopCustomer2Qty.VectorValue()</td>
+                                            <td>@item.TopCustomer3Qty.VectorValue()</td>
                                             <td>
-                                                <button class="btn btn-primary popTbl" data-target="#myPopover3">More</button>
+                                                <button class="btn popTbl" data-target="#myPopover3" data-Year="@item.MonthYear">
+                                                    <div class="tbl-btn">More</div>
+                                                    <div class="adge-bottom"></div>
+                                                </button>
+
+                                                @*<button class="btn btn-primary popTbl" data-target="#myPopover3" data-Year="@item.MonthYear">More</button>*@
                                             </td>
-                                            <td>@string.Format("{0:N0}", value)</td>
+                                            <td>@_totalshipped.VectorValue()</td>
                                             <td>-</td>
-                                            <td>-</td>
-                                            <th>20</th>
+                                            <td>@_totalPurhaseOrder.VectorValue()</td>
+                                            <th>@_totaltransfer.VectorValue()</th>
                                             <td>236</td>
                                             <td>3.01</td>
                                             <th>
@@ -110,19 +118,22 @@
 
                                         @foreach (var subitem in item.Items)
                                         {
-                                            value = (subitem.Customer1Qty.ConvertToDecimal() + subitem.Customer2Qty.ConvertToDecimal() + subitem.Customer3Qty.ConvertToDecimal());
                                             <tr class="hiddenRow accordian-body demo1">
                                                 <td>-</td>
                                                 <td>@subitem.WarehouseCode</td>
                                                 <td>@subitem.QuantityOnHand</td>
-                                                <td>@Html.Raw(string.IsNullOrEmpty(subitem.Customer1Qty) ? "-" : subitem.Customer1Qty.Split('.')[0])</td>
-                                                <td>@Html.Raw(string.IsNullOrEmpty(subitem.Customer2Qty) ? "-" : subitem.Customer2Qty.Split('.')[0])</td>
-                                                <td>@Html.Raw(string.IsNullOrEmpty(subitem.Customer3Qty) ? "-" : subitem.Customer3Qty.Split('.')[0])</td>
+                                                <td>@subitem.Customer1Qty.VectorValue()</td>
+                                                <td>@subitem.Customer2Qty.VectorValue()</td>
+                                                <td>@subitem.Customer3Qty.VectorValue()</td>
                                                 <td>-</td>
-                                                <td>@string.Format("{0:N0}", value)</td>
+                                                <td>
+                                                    @subitem.ShippedQuantity.VectorValue()
+                                                </td>
                                                 <td>-</td>
-                                                <td>-</td>
-                                                <td>20</td>
+                                                <td>@subitem.PurhaseOrder.VectorValue()</td>
+                                                <td>
+                                                    @subitem.Transfer.VectorValue()
+                                                </td>
                                                 <td>236</td>
                                                 <td>281</td>
                                             </tr>
@@ -133,94 +144,15 @@
                             </table>
                         </div>
                     </div>
-
                     <div id="myPopover3" class="colapse-table table-marg poptable">
-                        <div class="arrow"></div>
-                        <div class="popover-content">
-                            <table class="table" style="border-collapse:collapse;display: block;overflow-x: auto;">
-                                <thead>
-                                    <tr>
-                                        <th>Month/Year</th>
-                                        <th>Warehouse</th>
-                                        <th>On Hand</th>
-                                        <th>AHRC</th>
-                                        <th>Blue Stem </th>
-                                        <th>DIB</th>
-                                        <th></th>
-                                        <th>Shipped Quantity</th>
-                                        <th>Already Shipped</th>
-                                        <th>On Order</th>
-                                        <th>Transfer</th>
-                                        <th>Proj/Act & Quantity </th>
-                                        <th>MOS</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th>Jan, 2014</th>
-                                        <th>Total</th>
-                                        <th>80</th>
-                                        <th>4</th>
-                                        <th>18</th>
-                                        <th>-</th>
-                                        <th>-</th>
-                                        <th>102</th>
-                                        <th>-</th>
-                                        <th>-</th>
-                                        <th>20</th>
-                                        <th>236</th>
-                                        <th>3.01</th>
-                                    </tr>
-                                    <tr>
-                                        <td>-</td>
-                                        <td>BNX</td>
-                                        <td>80</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>80</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>20</td>
-                                        <td>236</td>
-                                        <td>281</td>
-                                    </tr>
-                                    <tr>
-                                        <td>-</td>
-                                        <td>BNX</td>
-                                        <td>80</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>80</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>20</td>
-                                        <td>236</td>
-                                        <td>281</td>
-                                    </tr>
-                                    <tr>
-                                        <td>-</td>
-                                        <td>BNX</td>
-                                        <td>80</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>80</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>20</td>
-                                        <td>236</td>
-                                        <td>281</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="arrow"></div>
+                            <div class="popover-content">
+                                <div id="loading">
+                                    <img src="~/Images/loading.gif" />
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
             </div>
         </div>
     </div>
@@ -228,5 +160,27 @@
 
 @section Scripts
 {
+    <script type="text/javascript">
+        $(function () {
 
+        }); 
+        ``
+        $(document).on("click", ".popTbl", function () {           
+            var monthYear = $(this).attr("data-Year");
+            var customDate = monthYear.split(',');
+
+            var _itemCode = '@Model.ProductId';            
+            $.ajax({
+                url: '@Url.Action("_GetItemWareHouseDetail", "Products")',
+                data: { itemCode: _itemCode, Month: customDate[0], Year: customDate[1] },
+                cache: false,
+                type: "GET",
+                success: function (data) {
+                    $(".popover-content").empty().html(data);
+                }
+            });
+
+
+        });
+    </script>
 }

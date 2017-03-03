@@ -135,16 +135,6 @@ input[type=text], textarea {
     font-size: 16px;
 }
 
-    input[type=text]:focus, textarea:focus {
-        box-shadow: 0 0 5px rgba(216, 41, 49, 1);
-        padding: 3px 0px 3px 10px;
-        margin: 5px 1px 3px 0px;
-        border: 1px solid rgba(216, 41, 49, 1);
-        font-family: 'museo_sans300', Arial, sans-serif;
-        color: #000;
-        font-size: 16px;
-    }
-
 .button {
     text-align: center;
     color: #FFFFFF;
@@ -175,6 +165,7 @@ input[type=text], textarea {
         }
 
 
+
 .update {
     text-align: right;
     color: #FFFFFF;
@@ -203,7 +194,6 @@ input[type=text], textarea {
             background: linear-gradient(to bottom, #d92b15 0%, #f1452f 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
             filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d92b15', endColorstr='#f1452f', GradientType=0 ); /* IE6-9 */
         }
-
 
 .forget-error {
     text-align: right;
@@ -281,8 +271,6 @@ input[type=text], textarea {
     line-height: 0px;
  	font-size: 20px;
 	color:#000000;
-
-	
 }		
 */
 .navbar-nav li:last-child {
@@ -542,6 +530,10 @@ input[type=text], textarea {
 .page-height {
     min-height: 750px;
 }
+
+
+
+
 
 .sidebar-heading {
     background: #2e2a2b; /* Old browsers */
@@ -870,39 +862,113 @@ border:2px solid #231f20;
     margin: 0px;
 }
 
-
-
     .colapse-table thead {
-        background: #2e2a2b; /* Old browsers */
-        background: -moz-linear-gradient(top, #2e2a2b 50%, #231f20 51%, #231f20 100%); /* FF3.6-15 */
-        background: -webkit-linear-gradient(top, #2e2a2b 50%, #231f20 51%, #231f20 100%); /* Chrome10-25,Safari5.1-6 */
-        background: linear-gradient(to bottom, #2e2a2b 50%, #231f20 51%, #231f20 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2e2a2b', endColorstr='#231f20', GradientType=0 ); /* IE6-9 */
-        color: #FFFFFF;
+        /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#231f20+0,2e2a2b+100 */
+        background: #231f20; /* Old browsers */
+        background: -moz-linear-gradient(top, #231f20 0%, #2e2a2b 100%); /* FF3.6-15 */
+        background: -webkit-linear-gradient(top, #231f20 0%,#2e2a2b 100%); /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(to bottom, #231f20 0%,#2e2a2b 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#231f20', endColorstr='#2e2a2b',GradientType=0 ); /* IE6-9 */
+        color: #D7D7D7;
     }
 
-    .colapse-table tbody tr:nth-child(1) {
-        background: rgba(234,63,72,1);
-        background: -moz-linear-gradient(top, rgba(234,63,72,1) 0%, rgba(234,63,72,1) 48%, rgba(231,37,47,1) 48%, rgba(231,37,47,1) 49%, rgba(231,37,47,1) 100%);
-        background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(234,63,72,1)), color-stop(48%, rgba(234,63,72,1)), color-stop(48%, rgba(231,37,47,1)), color-stop(49%, rgba(231,37,47,1)), color-stop(100%, rgba(231,37,47,1)));
-        background: -webkit-linear-gradient(top, rgba(234,63,72,1) 0%, rgba(234,63,72,1) 48%, rgba(231,37,47,1) 48%, rgba(231,37,47,1) 49%, rgba(231,37,47,1) 100%);
-        background: -o-linear-gradient(top, rgba(234,63,72,1) 0%, rgba(234,63,72,1) 48%, rgba(231,37,47,1) 48%, rgba(231,37,47,1) 49%, rgba(231,37,47,1) 100%);
-        background: -ms-linear-gradient(top, rgba(234,63,72,1) 0%, rgba(234,63,72,1) 48%, rgba(231,37,47,1) 48%, rgba(231,37,47,1) 49%, rgba(231,37,47,1) 100%);
-        background: linear-gradient(to bottom, rgba(234,63,72,1) 0%, rgba(234,63,72,1) 48%, rgba(231,37,47,1) 48%, rgba(231,37,47,1) 49%, rgba(231,37,47,1) 100%);
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ea3f48', endColorstr='#e7252f', GradientType=0 );
-        color: #FFFFFF;
-        font-family: 'museo_sans500', Arial, sans-serif;
+
+.popTbl {
+    padding: 0;
+    border: 0;
+    margin-bottom: -5px;
+    color: #D7D7D7;
+    background-color: transparent;
+}
+
+    .popTbl:focus {
+        background: 0;
+        outline: 0 !important;
+        color: #D7D7D7;
     }
+
+    .popTbl:active {
+        background: 0;
+        outline: 0 !important;
+        color: #D7D7D7;
+    }
+
+    .popTbl:hover {
+        background: none;
+        outline: 0 !important;
+        color: #D7D7D7;
+    }
+
+.tbl-btn {
+    position: relative;
+    padding: 2px 7px;
+    border: none;
+    background: #292526;
+    border-radius: 2px;
+}
+
+.adge-bottom {
+    top: 100%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    margin-left: -5px;
+    border-width: 5px;
+    margin: 0 auto;
+    border-style: solid;
+    border-color: #292526 transparent transparent transparent;
+}
+
+/*
+.colapse-table thead {
+		background: #2e2a2b; 
+	background: -moz-linear-gradient(top, #2e2a2b 50%, #231f20 51%, #231f20 100%); 
+	background: -webkit-linear-gradient(top, #2e2a2b 50%, #231f20 51%, #231f20 100%); 
+	background: linear-gradient(to bottom, #2e2a2b 50%, #231f20 51%, #231f20 100%); /
+	color:#FFFFFF;
+}
+	*/
+
+/*
+.colapse-table tbody tr:nth-child(1){
+	background: rgba(234,63,72,1);
+	background: -moz-linear-gradient(top, rgba(234,63,72,1) 0%, rgba(234,63,72,1) 48%, rgba(231,37,47,1) 48%, rgba(231,37,47,1) 49%, rgba(231,37,47,1) 100%);
+	background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(234,63,72,1)), color-stop(48%, rgba(234,63,72,1)), color-stop(48%, rgba(231,37,47,1)), color-stop(49%, rgba(231,37,47,1)), color-stop(100%, rgba(231,37,47,1)));
+	background: -webkit-linear-gradient(top, rgba(234,63,72,1) 0%, rgba(234,63,72,1) 48%, rgba(231,37,47,1) 48%, rgba(231,37,47,1) 49%, rgba(231,37,47,1) 100%);
+	background: -o-linear-gradient(top, rgba(234,63,72,1) 0%, rgba(234,63,72,1) 48%, rgba(231,37,47,1) 48%, rgba(231,37,47,1) 49%, rgba(231,37,47,1) 100%);
+	background: -ms-linear-gradient(top, rgba(234,63,72,1) 0%, rgba(234,63,72,1) 48%, rgba(231,37,47,1) 48%, rgba(231,37,47,1) 49%, rgba(231,37,47,1) 100%);
+	background: linear-gradient(to bottom, rgba(234,63,72,1) 0%, rgba(234,63,72,1) 48%, rgba(231,37,47,1) 48%, rgba(231,37,47,1) 49%, rgba(231,37,47,1) 100%);
+ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ea3f48', endColorstr='#e7252f', GradientType=0 );
+ color:#FFFFFF;
+ font-family: 'museo_sans500', Arial, sans-serif;}		
+ */
+
+.colapse-table tbody tr:nth-child(1) {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ea3f48+0,e7252f+100 */
+    background: #ea3f48; /* Old browsers */
+    background: -moz-linear-gradient(top, #ea3f48 0%, #e7252f 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, #ea3f48 0%,#e7252f 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, #ea3f48 0%,#e7252f 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ea3f48', endColorstr='#e7252f',GradientType=0 ); /* IE6-9 */
+    font-family: 'museo_sans500', Arial, sans-serif;
+    color: #D7D7D7;
+}
 
 .margin-top {
     margin-top: 20px !important;
 }
 
 .colapse-table th {
-    vertical-align: top !important;
+    vertical-align: middle !important;
     text-align: center !important;
     border-right: 1px solid #FFFFFF;
 }
+
+    .colapse-table th:nth-child(2) {
+        vertical-align: center !important;
+        text-align: center !important;
+        border-right: 1px solid #FFFFFF;
+    }
 
     .colapse-table th:nth-child(13) {
         border-right: 0px;
@@ -924,11 +990,94 @@ border:2px solid #231f20;
 }
 
 
-.showhide {
-    display: none;
+.colapse-table tbody {
+    text-align: center;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f1f0f0+1,e3e3e3+100 */
+    border-bottom: 10px solid #fff;
+    background: #f1f0f0; /* Old browsers */
+    background: -moz-linear-gradient(top, #f1f0f0 1%, #e3e3e3 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, #f1f0f0 1%,#e3e3e3 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, #f1f0f0 1%,#e3e3e3 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f1f0f0', endColorstr='#e3e3e3',GradientType=0 ); /* IE6-9 */
 }
 
-.colapse-table tbody {
+
+.colapse-table-two table {
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+    width: 100% !important;
+}
+
+
+.colapse-table-two {
+    padding: 0px 0px 0 0px;
+    margin: 0px 0 0px 0;
+    width: 100%;
+}
+
+
+    .colapse-table-two thead {
+        background: #2e2a2b; /* Old browsers */
+        background: -moz-linear-gradient(top, #2e2a2b 50%, #231f20 51%, #231f20 100%); /* FF3.6-15 */
+        background: -webkit-linear-gradient(top, #2e2a2b 50%, #231f20 51%, #231f20 100%); /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(to bottom, #2e2a2b 50%, #231f20 51%, #231f20 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2e2a2b', endColorstr='#231f20', GradientType=0 ); /* IE6-9 */
+        color: #FFFFFF;
+    }
+
+    .colapse-table-two tbody tr:nth-child(1) {
+        background: -moz-linear-gradient(top, #f1f0f0 1%, #e3e3e3 100%) !important; /* FF3.6-15 */
+        background: -webkit-linear-gradient(top, #f1f0f0 1%,#e3e3e3 100%) !important; /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(to bottom, #f1f0f0 1%,#e3e3e3 100%) !important; /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f1f0f0', endColorstr='#e3e3e3',GradientType=0 ) !important; /* IE6-9 */
+        color: #000000;
+        font-family: 'museo_sans300', Arial, sans-serif;
+    }
+
+
+    .colapse-table-two tbody tr:last-child {
+        font-family: 'museo_sans500', Arial, sans-serif !important;
+        font-weight: bold !important;
+    }
+
+
+.margin-top {
+    margin-top: 20px !important;
+}
+
+.colapse-table-two th {
+    vertical-align: top !important;
+    text-align: center !important;
+    border-right: 1px solid #FFFFFF;
+}
+
+    .colapse-table-two th:nth-child(2) {
+        vertical-align: center !important;
+        text-align: center !important;
+        border-right: 1px solid #FFFFFF;
+    }
+
+    .colapse-table-two th:nth-child(13) {
+        border-right: 0px;
+    }
+
+.colapse-table-two thead:nth-child(13) {
+    background-color: none !important;
+}
+
+.colapse-table-two th:nth-child(14) {
+    background-color: none !important;
+    border-radius: 0px 7px 7px 0px;
+    border-top: 0px !important;
+}
+
+.colapse-table-two td {
+    text-align: center;
+    border-right: 1px solid #FFFFFF;
+}
+
+
+.colapse-table-two tbody {
     text-align: center;
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f1f0f0+1,e3e3e3+100 */
     background: #f1f0f0; /* Old browsers */
@@ -936,6 +1085,12 @@ border:2px solid #231f20;
     background: -webkit-linear-gradient(top, #f1f0f0 1%,#e3e3e3 100%); /* Chrome10-25,Safari5.1-6 */
     background: linear-gradient(to bottom, #f1f0f0 1%,#e3e3e3 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f1f0f0', endColorstr='#e3e3e3',GradientType=0 ); /* IE6-9 */
+}
+
+
+
+.showhide {
+    display: none;
 }
 
 .popover {
@@ -954,15 +1109,27 @@ border:2px solid #231f20;
 }
 
 .popover-content {
-    padding: 0px !important;
+    padding: 6px !important;
     margin: 0px;
+    /* box-shadow: 0px 0px 15px #444; */
+    border: 1px solid #444;
+    background: #e0e6e4;
 }
+
+    .popover-content table td {
+        background-color: none;
+    }
 
 .colapse-table thead {
     border-collapse: collapse;
     border-spacing: 0;
     width: 100% !important;
     border: 1px solid #ddd;
+}
+
+.popover-content table {
+    margin-bottom: 0;
+    border: 1px solid #fff;
 }
 
 
@@ -982,15 +1149,13 @@ border:2px solid #231f20;
     margin: 45px auto 0;
     -webkit-transition: opacity 0.8s;
     transition: opacity 0.3s;
-    width: 89% !important;
+    width: auto% !important;
 }
 
     .poptable.trued {
         visibility: visible;
         opacity: 1;
     }
-
-
 
 .modal-number-box {
     margin: 0px auto;
@@ -999,33 +1164,44 @@ border:2px solid #231f20;
     padding: 20px 0 0 5px;
 }
 
+.btn-close {
+    width: 20px;
+    height: 20px;
+    background: #000;
+    color: #fff;
+    text-align: center;
+    border-radius: 50%;
+    cursor: pointer;
+    position: absolute;
+    right: -10px;
+    top: -10px;
+}
+
+.modal-number-box th {
+    background-color: #efefef;
+}
+
+.modal-number-box table, th, td {
+    border: 1px solid #dcdcdc;
+    border-collapse: collapse;
+}
+
+.modal-number-box th, td {
+    padding: 5px;
+    text-align: left;
+}
 
 
-    .modal-number-box th {
-        background-color: #efefef;
-    }
+.modal-number-box table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100% !important;
+    border: none;
+}
 
-    .modal-number-box table, th, td {
-        border: 1px solid #dcdcdc;
-        border-collapse: collapse;
-    }
-
-    .modal-number-box th, td {
-        padding: 5px;
-        text-align: left;
-    }
-
-
-    .modal-number-box table {
-        border-collapse: collapse;
-        border-spacing: 0;
-        width: 100% !important;
-        border: none;
-    }
-
-    .modal-number-box input {
-        width: 100% !important;
-    }
+.modal-number-box input {
+    width: 100% !important;
+}
 
 
 
@@ -1081,6 +1257,15 @@ border:2px solid #231f20;
             filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d92b15', endColorstr='#f1452f', GradientType=0 ); /* IE6-9 */
         }
 
+.registraion-form {
+    background-image: url(../images/patterns.jpg);
+    background-repeat: repeat;
+    /*	background-color:#e7252f;*/
+    margin: 20px 0px 0 0px;
+    padding: 20px 0px 40px 0px;
+    border: 1px solid #e3e3e3;
+}
+
 /*.form-float label {
 	float:left;}	
 	
@@ -1088,6 +1273,12 @@ border:2px solid #231f20;
 }	*/
 
 /*MediaQueries*/
+
+table {
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+    width: 100% !important;
+}
 
 @media (max-width: 1200px) {
     .navbar-default .navbar-nav > li > a {
@@ -1150,6 +1341,17 @@ border:2px solid #231f20;
 
     .colapse-table table {
         width: 90%;
+    }
+
+
+    .colapse-table-two {
+        padding: 0px 10px 0 10px;
+        margin: 0px 0 0px 0%;
+        width: 93%;
+    }
+
+    .poptable {
+        margin: 61px auto 0;
     }
 }
 
@@ -1282,6 +1484,16 @@ border:2px solid #231f20;
     transition: all 0.3s ease-in-out;
 }*/
 
+
+    .colapse-table-two {
+        padding: 0px 10px 0 10px;
+        margin: 0px 0 0px 0%;
+        width: 91% !important;
+    }
+
+    .poptable {
+        margin: 61px auto 0;
+    }
 }
 
 @media (max-width: 650px) {
@@ -1339,4 +1551,337 @@ border:2px solid #231f20;
 }
 
 
+
+
 /*MediaQueries*/
+
+/*input-css-registration*/
+.input {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    margin: 1em;
+    max-width: 350px;
+    width: calc(100% - 2em);
+    vertical-align: top;
+}
+
+.input__field {
+    position: relative;
+    display: block;
+    float: right;
+    padding: 0.8em;
+    width: 60%;
+    border: none;
+    border-radius: 0;
+    background: #f0f0f0;
+    color: #aaa;
+    font-weight: bold;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-appearance: none; /* for box shadows to show on iOS */
+}
+
+    .input__field:focus {
+        outline: none;
+    }
+
+.input__label {
+    display: inline-block;
+    float: right;
+    padding: 0 1em;
+    width: 40%;
+    color: #dadada;
+    font-weight: 100;
+    font-size: 70.25%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.input__label-content {
+    position: relative;
+    display: block;
+    padding: 1.6em 0;
+    width: 100%;
+}
+
+.graphic {
+    position: absolute;
+    top: 0;
+    left: 0;
+    fill: none;
+}
+
+.icon {
+    color: #ddd;
+    font-size: 150%;
+}
+
+/* Individual styles */
+
+/* Individual styles */
+
+/* Juro */
+.input--juro {
+    overflow: hidden !important;
+    border: 1px solid #dadada;
+}
+
+.input__field--juro {
+    position: absolute !important;
+    z-index: 100 !important;
+    padding: 2.15em 0.75em 0 !important;
+    width: 100% !important;
+    background: transparent !important;
+    color: #1784cd !important;
+    font-size: 0.85em !important;
+}
+
+.input__label--juro {
+    padding: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: #fff;
+    text-align: left !important;
+}
+
+.input__label-content--juro {
+    padding: 2em 1em !important;
+    -webkit-transform-origin: 0% 50% !important;
+    transform-origin: 0% 50% !important;
+    -webkit-transition: -webkit-transform 0.3s, color 0.3s !important;
+    transition: transform 0.3s, color 0.3s !important;
+    text-rendering: geometricPrecision !important;
+}
+
+.input__label--juro::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100%;
+    height: 100%;
+    border: 0px solid transparent;
+    -webkit-transition: border-width 0.3s, border-color 0.3s;
+    transition: border-width 0.3s, border-color 0.3s;
+}
+
+.input__field--juro:focus + .input__label--juro::before,
+.input--filled .input__label--juro::before {
+    border-width: 8px !important;
+    border-color: #282727 !important;
+    border-top-width: 2em !important;
+}
+
+.input__field--juro:focus + .input__label--juro .input__label-content--juro,
+.input--filled .input__label--juro .input__label-content--juro {
+    color: #fff;
+    -webkit-transform: translate3d(0, -1.5em, 0) scale3d(0.75, 0.75, 1) !important;
+    transform: translate3d(0, -1.5em, 0) scale3d(0.75, 0.75, 1) translateZ(1px) !important;
+}
+
+
+
+article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
+    display: block;
+}
+
+audio, canvas, video {
+    display: inline-block;
+}
+
+    audio:not([controls]) {
+        display: none;
+        height: 0;
+    }
+
+[hidden] {
+    display: none;
+}
+
+html {
+    font-family: sans-serif;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+}
+
+a:focus {
+    outline: thin dotted;
+}
+
+a:active, a:hover {
+    outline: 0;
+}
+
+h1 {
+    font-size: 2em;
+    margin: 0.67em 0;
+}
+
+abbr[title] {
+    border-bottom: 1px dotted;
+}
+
+b, strong {
+    font-weight: bold;
+}
+
+dfn {
+    font-style: italic;
+}
+
+hr {
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    height: 0;
+}
+
+mark {
+    background: #ff0;
+    color: #000;
+}
+
+code, kbd, pre, samp {
+    font-family: monospace,serif;
+    font-size: 1em;
+}
+
+pre {
+    white-space: pre-wrap;
+}
+
+q {
+    quotes: "\201C" "\201D" "\2018" "\2019";
+}
+
+small {
+    font-size: 80%;
+}
+
+sub, sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+
+sup {
+    top: -0.5em;
+}
+
+sub {
+    bottom: -0.25em;
+}
+
+img {
+    border: 0;
+}
+
+svg:not(:root) {
+    overflow: hidden;
+}
+
+figure {
+    margin: 0;
+}
+
+fieldset {
+    border: 1px solid #c0c0c0;
+    margin: 0 2px;
+    padding: 0.35em 0.625em 0.75em;
+}
+
+legend {
+    border: 0;
+    padding: 0;
+}
+
+button, input, select, textarea {
+    font-family: inherit;
+    font-size: 100%;
+    margin: 0;
+}
+
+button, input {
+    line-height: normal;
+}
+
+button, select {
+    text-transform: none;
+}
+
+button, html input[type="button"], input[type="reset"], input[type="submit"] {
+    -webkit-appearance: button;
+    cursor: pointer;
+}
+
+    button[disabled], html input[disabled] {
+        cursor: default;
+    }
+
+input[type="checkbox"], input[type="radio"] {
+    box-sizing: border-box;
+    padding: 0;
+}
+
+input[type="search"] {
+    -webkit-appearance: textfield;
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+    input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration {
+        -webkit-appearance: none;
+    }
+
+button::-moz-focus-inner, input::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+textarea {
+    overflow: auto;
+    vertical-align: top;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+
+
+
+
+.content-r {
+    font-size: 150%;
+    padding: 0em 0;
+}
+
+
+
+.bgcolor-6 {
+    background: none;
+    color: #fff;
+}
+
+
+.content-r input[type=text] {
+    box-shadow: none;
+    outline: none;
+    font-weight: 100;
+    border: none;
+    font-family: 'museo_sans300', Arial, sans-serif;
+    color: #282727 !important;
+    font-size: 16px;
+}

@@ -1,0 +1,59 @@
+﻿@model Dictionary<string, Dictionary<string, decimal>>
+@{
+    ViewBag.Title = "_GetItemWareHouseDetail";
+}
+
+
+@if (Model != null && Model.Count > 0)
+{ <div class="btn-close">X</div>
+    <table class="colapse-table-two table" style="border-collapse:collapse;display: block;overflow-x: auto;">
+        <thead>
+            <tr>
+                <th>Warehouse</th>
+                @foreach (var item in Model)
+                {
+                    foreach (var subitem in item.Value)
+                    {
+                        <th>@subitem.Key</th>
+                    }
+                    break;
+                }
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                decimal possitve = 0, negative = 0;
+
+                <tr>
+                    <td>@item.Key</td>
+                    
+                    @foreach (var subitem in item.Value)
+                    {
+                        <td>
+                            @{
+                                if (subitem.Value > 0)
+                                {
+                                    possitve += subitem.Value;
+                                }
+                                else
+                                {
+                                    negative += subitem.Value;
+                                }
+                                var value = subitem.Value.VectorValue();
+                                if (value == "0")
+                                {
+                                    value = "-";
+                                }
+                                @value
+                            }
+                        </td>
+                                }
+                    <td>@Html.Raw(negative + possitve)</td>
+                </tr>
+                                }
+        </tbody>
+    </table>
+
+                                }

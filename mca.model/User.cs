@@ -10,9 +10,8 @@ namespace mca.model
     {
         public int id { set; get; }
         public string FirstName { set; get; }
-        public string LastName { set; get; }
-        public string UserName { set; get; }
-        //public String Email { set; get; }
+        public string LastName { set; get; }        
+        public String Email { set; get; }
         public string Password { set; get; }
         //public String SecretQuestion { set; get; }
         //public String SecretAnswer { set; get; }

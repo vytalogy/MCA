@@ -35,8 +35,7 @@ namespace mca.web.Controllers
             return View(query);
         }
        
-        [HttpGet]
-        //[OutputCache(Duration = 30, VaryByParam = "none")]
+        [HttpGet]       
         public ActionResult Login()
         {
             LoginViewModel login = new LoginViewModel { };
@@ -56,7 +55,7 @@ namespace mca.web.Controllers
                 {
                     System.Web.HttpContext.Current.Session["isLogin"] = "true";
                     System.Web.HttpContext.Current.Session["UserId"] = q.id;
-                    System.Web.HttpContext.Current.Session["UserName"] = q.UserName;
+                    System.Web.HttpContext.Current.Session["Email"] = q.Email;
                     System.Web.HttpContext.Current.Session["IsActive"] = q.Active ? "true" : "false";
                     System.Web.HttpContext.Current.Session["RoleName"] = q.RoleName;
 
@@ -71,6 +70,7 @@ namespace mca.web.Controllers
             return View(model);
         }
 
+        [OutputCache(Duration = 30, VaryByParam = "none")]
         [Restricted]
         [HttpGet]        
         public ActionResult Create()
@@ -84,7 +84,7 @@ namespace mca.web.Controllers
             }).ToList();
             return View(model);
         }
-
+        
         [Restricted]
         [HttpPost]
         public ActionResult Create(RegistorViewModel model)
@@ -97,7 +97,7 @@ namespace mca.web.Controllers
 
                     FirstName = model.FirstName,
                     LastName = model.LastName,
-                    UserName = model.UserName,
+                    Email = model.Email,
                     CreatedBy = Auth.UserID,
                     Password = model.Password,
                     RoleID = model.RoleID,
@@ -121,6 +121,7 @@ namespace mca.web.Controllers
             return View(model);
         }
 
+        [OutputCache(Duration = 30, VaryByParam = "id")]
         [Restricted]
         [HttpGet]
         public ActionResult Edit(int? id)
@@ -141,8 +142,7 @@ namespace mca.web.Controllers
             {
                 FirstName = _data.FirstName,
                 LastName = _data.LastName,
-                UserName = _data.UserName,
-               // Password = _data.Password,
+                Email = _data.Email,
                 RoleID = _data.RoleID,
             };
 
@@ -169,7 +169,7 @@ namespace mca.web.Controllers
                     id = model.id,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
-                    UserName = model.UserName,                   
+                    Email = model.Email,                   
                     RoleID = model.RoleID,
                 };
                 bool isSuccess = _userDal.Update(_user, out errorMsg);
@@ -217,6 +217,5 @@ namespace mca.web.Controllers
             
             return RedirectToAction("Login", "Account");
         }
-
     }
 }

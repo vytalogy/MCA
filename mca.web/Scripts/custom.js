@@ -28,13 +28,14 @@ $('.popTbl').each( function(){
 	    var toppy = $(this).offset().top;
 		$('body').find('.poptable').not(thistarget).removeClass('trued');
 		$(thistarget).toggleClass('trued').css('top',toppy);
-	});
+    });
+
 });
 
 
-
-
-     
+$(document).on("click", ".btn-close", function (e) {
+    $('body').find('.trued').removeClass("trued");
+});
 
 
 

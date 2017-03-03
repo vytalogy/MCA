@@ -34,7 +34,7 @@ namespace mca.dal
                 string query = @"UserGet";
                 User _data = this._db.Query<User>(query, new
                 {
-                    userName = userName,
+                    Email = userName,
                     password = password
                 }, commandType: CommandType.StoredProcedure).FirstOrDefault();
 
@@ -96,14 +96,14 @@ namespace mca.dal
             errorMsg = string.Empty;                     
             try
             {
-                string query = @"Insert into [User] (FirstName,LastName,UserName,Password,NoOfLogin,CreatedBy,CreatedOn,Active)
+                string query = @"Insert into [User] (FirstName,LastName,Email,Password,NoOfLogin,CreatedBy,CreatedOn,Active)
                                Values (@FirstName,@LastName,@UserName,@Password,@NoOfLogin,@CreatedBy,@CreatedOn,@Active) SELECT SCOPE_IDENTITY()";
 
                 int userId = this._db.ExecuteScalar<int>(query, new
                 {
                     FirstName = _User.FirstName,
                     LastName = _User.LastName,
-                    UserName = _User.UserName,
+                    Email = _User.Email,
                     Password = _User.Password,
                     NoOfLogin =0,
                     CreatedBy = _User.CreatedBy,
@@ -137,14 +137,14 @@ namespace mca.dal
                 string query = @"Update [User] 
                                 Set FirstName = @FirstName,
                                 LastName = @LastName,
-                                UserName = @UserName                               
+                                Email = @Email                               
                                 where id = @userId";
 
                 this._db.ExecuteScalar<int>(query, new
                 {
                     FirstName = _User.FirstName,
                     LastName = _User.LastName,
-                    UserName = _User.UserName,                 
+                    Email = _User.Email,                 
                     UserId = _User.id,
                 }, commandType: CommandType.Text);
 
