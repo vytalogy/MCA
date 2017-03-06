@@ -54,25 +54,29 @@ namespace mca.providex
 
         public ProductDataModel GetItemWareHouse(string filter)
         {
-            ProductDataModel model = new ProductDataModel { Items = new List<ProductDataItem> { } };           
-            int lastdayofmonth = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month == 12 ? DateTime.Now.Month : DateTime.Now.Month + 1);
-            string startdate = "2016-02-01";
-            string enddate = "2016-02-29";
+            ProductDataModel model = new ProductDataModel
+            {
+                Items = new List<ProductDataItem> { }
+            };
 
-            //string startdate = string.Format("{0:yyyy-MM}", DateTime.Now.AddMonths(-24)) + "-01";
-            //string enddate = string.Format("{0:yyyy-MM}", DateTime.Now.AddMonths(+13)) + "-" + lastdayofmonth;
+            int lastdayofmonth = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month == 12 ? DateTime.Now.Month : DateTime.Now.Month + 1);
+            // string startdate = "2016-02-01";
+            //string enddate = "2016-02-29";
+
+            string startdate = string.Format("{0:yyyy-MM}", DateTime.Now.AddMonths(-24)) + "-01";
+            string enddate = string.Format("{0:yyyy-MM}", DateTime.Now.AddMonths(+13)) + "-" + lastdayofmonth;
 
             string query = @"SELECT YEAR = YEAR(TRANSACTIONDATE), MONTH = MONTH(TRANSACTIONDATE), MMM = UPPER(LEFT(DATENAME(MONTH, TRANSACTIONDATE), 3))
-                                FROM IM_ITEMTRANSACTIONHISTORY WHERE ITEMCODE = @FILTER AND (TRANSACTIONDATE >= @STARTDATE AND TRANSACTIONDATE <= @enddate)
-                                and WarehouseCode not in  ('FR', '0000', 'CHN', 'DCH','USA') 
+                                FROM IM_ITEMTRANSACTIONHISTORY WHERE ITEMCODE = @filter AND (TRANSACTIONDATE >= @startdate AND TRANSACTIONDATE <= @enddate)
+                                and WarehouseCode not in  ('FR', '0000', 'CHN', 'DCH','USA') and CustomerNo is not null and TransactionCode='so'
                                 GROUP BY YEAR(TRANSACTIONDATE), MONTH(TRANSACTIONDATE), DATENAME(MONTH, TRANSACTIONDATE)
                                 ORDER BY YEAR ASC, MONTH ASC";
-
             List<dynamic> _data = this._db.Query<dynamic>(query, new
             {
                 filter = filter,
                 startdate = startdate,
                 enddate = enddate
+
             }).ToList();
             foreach (var item in _data)
             {
@@ -80,16 +84,19 @@ namespace mca.providex
                 startdate = item.YEAR.ToString() + "-" + item.MONTH.ToString() + "-01";
                 enddate = item.YEAR.ToString() + "-" + item.MONTH.ToString() + "-" + lastdayofmonth;
 
-                ProductDataItem _ProductItem = new ProductDataItem { MonthYear = item.MMM.ToString() + ", " + item.YEAR.ToString(), Items = new List<ProductDataLineItem> { } };
-                _ProductItem.Items = new List<ProductDataLineItem> { };
-
+                ProductDataItem _ProductItem = new ProductDataItem
+                {
+                    MonthYear = item.MMM.ToString() + ", " + item.YEAR.ToString(),
+                    Items = new List<ProductDataLineItem> { }
+                };
+                List<string> WarehouseCode = new List<string> { };
                 #region Top 3 Customers
 
-                string TopCustomerquery = @"select top 3 WarehouseCode,customerno,'TopQty' = sum(HISTORY.TransactionQty) from IM_ITEMTRANSACTIONHISTORY HISTORY 
+                string TopCustomerquery = @"select WarehouseCode,customerno,'TopQty' = sum(HISTORY.TransactionQty) from IM_ITEMTRANSACTIONHISTORY HISTORY 
                                where HISTORY.itemcode =  @filter and HISTORY.TransactionCode = 'so'
-                               and(HISTORY.TransactionDate >= @startdate and HISTORY.TransactionDate <= @enddate)
-                               and WarehouseCode not in  ('FR', '0000', 'CHN', 'DCH','USA') and CustomerNo is not null
-                               group by WarehouseCode,customerno order by sum(HISTORY.TransactionQty)";
+                               and (HISTORY.TransactionDate >= @startdate and HISTORY.TransactionDate <= @enddate)
+                               and WarehouseCode not in  ('FR', '0000', 'CHN', 'DCH','USA') and HISTORY.CustomerNo is not null
+                               group by HISTORY.WarehouseCode, HISTORY.customerno order by sum(HISTORY.TransactionQty)";
 
                 dynamic TopCustomer = this._db.Query<dynamic>(TopCustomerquery, new
                 {
@@ -98,22 +105,9 @@ namespace mca.providex
                     enddate = enddate
                 }).ToList();
 
-                if (TopCustomer != null)
+                if (TopCustomer != null) //top customers and all warehouse of respected month.
                 {
-                    if (TopCustomer.Count == 1)
-                    {
-                        _ProductItem.TopCustomer1 = TopCustomer[0].customerno;
-                        _ProductItem.TopCustomer1Qty = TopCustomer[0].TopQty;
-                    }
-                    else if (TopCustomer.Count == 2)
-                    {
-                        _ProductItem.TopCustomer1 = TopCustomer[0].customerno;
-                        _ProductItem.TopCustomer1Qty = TopCustomer[0].TopQty;
-
-                        _ProductItem.TopCustomer2 = TopCustomer[1].customerno;
-                        _ProductItem.TopCustomer2Qty = TopCustomer[1].TopQty;
-                    }
-                    else if (TopCustomer.Count == 3)
+                    if (TopCustomer.Count >= 3)
                     {
                         _ProductItem.TopCustomer1 = TopCustomer[0].customerno;
                         _ProductItem.TopCustomer1Qty = TopCustomer[0].TopQty;
@@ -124,57 +118,68 @@ namespace mca.providex
                         _ProductItem.TopCustomer3 = TopCustomer[2].customerno;
                         _ProductItem.TopCustomer3Qty = TopCustomer[2].TopQty;
                     }
+                    else if (TopCustomer.Count >= 2)
+                    {
+                        _ProductItem.TopCustomer1 = TopCustomer[0].customerno;
+                        _ProductItem.TopCustomer1Qty = TopCustomer[0].TopQty;
+
+                        _ProductItem.TopCustomer2 = TopCustomer[1].customerno;
+                        _ProductItem.TopCustomer2Qty = TopCustomer[1].TopQty;
+                    }
+                    else if (TopCustomer.Count >= 1)
+                    {
+                        _ProductItem.TopCustomer1 = TopCustomer[0].customerno;
+                        _ProductItem.TopCustomer1Qty = TopCustomer[0].TopQty;
+                    }
+
+                    foreach (var warehouse in TopCustomer)
+                        WarehouseCode.Add(warehouse.WarehouseCode);
+
+                    WarehouseCode = WarehouseCode.Distinct().OrderBy(o => o).ToList();
                 }
 
                 #endregion
 
                 #region Detail line Item
-
-                query = @"select WarehouseCode from IM_ITEMTRANSACTIONHISTORY HISTORY where HISTORY.itemcode = @filter
-                          and (HISTORY.TransactionDate >= @startdate and HISTORY.TransactionDate <= @enddate)
-                          and WarehouseCode not in  ('FR', '0000', 'CHN', 'DCH','USA') group by WarehouseCode order by WarehouseCode";
-                List<string> WarehouseCode = this._db.Query<string>(query, new { filter = filter, startdate = startdate, enddate = enddate }).ToList();
-
+                
                 foreach (var subitem in WarehouseCode)
                 {
-                    ProductDataLineItem detail = new ProductDataLineItem { };
+                    ProductDataLineItem detail = new ProductDataLineItem { QuantityOnHand = 0 };
                     detail.WarehouseCode = subitem;
-                    if (subitem.Equals("COM"))
-                        detail.QuantityOnHand = 144;
 
                     string subquery = @"SELECT 
                                       (SELECT SUM(TransactionQty) FROM IM_ITEMTRANSACTIONHISTORY
                                       WHERE ItemCode = @filter and TransactionCode='so'
 		                              and (TransactionDate >= @startdate and TransactionDate <= @enddate)
-		                              and WarehouseCode not in  ('FR', '0000', 'CHN', 'DCH','USA') and WarehouseCode = @WarehouseCode
-                                      and CustomerNo=@TopCustomer1) Customer1Qty,
+		                              and WarehouseCode not in ('FR', '0000', 'CHN', 'DCH','USA') 
+                                      and WarehouseCode = @WarehouseCode and CustomerNo = @TopCustomer1) Customer1Qty,
 
                                       (SELECT SUM(TransactionQty) FROM IM_ITEMTRANSACTIONHISTORY
                                       WHERE ItemCode = @filter and TransactionCode='so'
 		                              and (TransactionDate >= @startdate and TransactionDate <= @enddate)
-		                              and WarehouseCode not in  ('FR', '0000', 'CHN', 'DCH','USA') and WarehouseCode = @WarehouseCode
-                                      and CustomerNo=@TopCustomer2) Customer2Qty,
+		                              and WarehouseCode not in ('FR', '0000', 'CHN', 'DCH','USA') 
+                                      and WarehouseCode = @WarehouseCode and CustomerNo = @TopCustomer2) Customer2Qty,
 
                                       (SELECT SUM(TransactionQty) FROM IM_ITEMTRANSACTIONHISTORY
                                       WHERE ItemCode = @filter and TransactionCode='so'
 		                              and (TransactionDate >= @startdate and TransactionDate <= @enddate)
-		                              and WarehouseCode not in  ('FR', '0000', 'CHN', 'DCH','USA') and WarehouseCode = @WarehouseCode
-                                      and CustomerNo=@TopCustomer3) Customer3Qty,
+		                              and WarehouseCode not in ('FR', '0000', 'CHN', 'DCH','USA') 
+                                      and WarehouseCode = @WarehouseCode and CustomerNo = @TopCustomer3) Customer3Qty,
 
                                       (SELECT SUM(TransactionQty) FROM IM_ITEMTRANSACTIONHISTORY
                                       WHERE ItemCode = @filter and TransactionCode='so'
 		                              and (TransactionDate >= @startdate and TransactionDate <= @enddate)
-		                              and WarehouseCode not in  ('FR', '0000', 'CHN', 'DCH','USA') and WarehouseCode = @WarehouseCode) ShippedQty,
+		                              and WarehouseCode not in ('FR', '0000', 'CHN', 'DCH','USA') and WarehouseCode = @WarehouseCode) ShippedQty,
 
                                       (SELECT SUM(TransactionQty) FROM IM_ITEMTRANSACTIONHISTORY
                                       WHERE ItemCode = @filter and TransactionCode='po'
 		                              and (TransactionDate >= @startdate and TransactionDate <= @enddate)
-                              		  and WarehouseCode not in  ('FR', '0000', 'CHN', 'DCH','USA') and WarehouseCode = @WarehouseCode) OnOrderQty,
+                              		  and WarehouseCode not in ('FR', '0000', 'CHN', 'DCH','USA') and WarehouseCode = @WarehouseCode) OnOrderQty,
 
 		                              (SELECT SUM(TransactionQty) FROM IM_ITEMTRANSACTIONHISTORY
                                       WHERE ItemCode = @filter and TransactionCode='it'
 		                              and (TransactionDate >= @startdate and TransactionDate <= @enddate)
-		                              and WarehouseCode not in  ('FR', '0000', 'CHN', 'DCH','USA') and WarehouseCode = @WarehouseCode) TransferQty";
+		                              and WarehouseCode not in ('FR', '0000', 'CHN', 'DCH','USA') and WarehouseCode = @WarehouseCode) TransferQty";
 
                     dynamic _subData = this._db.Query<dynamic>(subquery, new
                     {
@@ -218,13 +223,21 @@ namespace mca.providex
                             detail.Transfer = _subData.TransferQty;
                         else
                             detail.Transfer = 0;
+
+
+                        detail.ProjActQuantity = ((detail.ShippedQuantity + detail.Transfer) + detail.PurhaseOrder);
                     }
+                    
                     _ProductItem.Items.Add(detail);
+                    detail = null;
+                    _subData = null;
                 }
 
+                WarehouseCode = null;
                 #endregion
 
                 model.Items.Add(_ProductItem);
+                _ProductItem = null;
             }
             _data = null;
             return model;
@@ -276,7 +289,7 @@ namespace mca.providex
                 collectionCustomer = "'" + string.Join("','", _AllCustomers) + "'";            
 
             Dictionary<string, decimal> innerlist = null;
-            foreach (var item in _AllWareHouses)
+            foreach (var wareHouse in _AllWareHouses)
             {
                 innerlist = new Dictionary<string, decimal> { };
                 query = @"select customerno,'SalesOrder' = sum(HISTORY.TransactionQty) from IM_ITEMTRANSACTIONHISTORY HISTORY where HISTORY.itemcode = @filter
@@ -288,24 +301,25 @@ namespace mca.providex
                     filter = filter,
                     startdate = startdate,
                     enddate = enddate,
-                    WarehouseCode = item,
+                    WarehouseCode = wareHouse,
                 }).ToDictionary(row => (string)row.customerno, row => (decimal)row.SalesOrder);
 
 
                 if (customerlist != null && customerlist.Count > 0)
                 {
-                    foreach (var subitem in _AllCustomers)
+                    foreach (var item in _AllCustomers)
                     {
-                        var test = customerlist.Where(w => w.Key.Equals(subitem)).ToDictionary(i => i.Key, i => i.Value).FirstOrDefault();
-                        if (!string.IsNullOrEmpty(test.Key))
-                            innerlist.Add(test.Key, test.Value);
+                        var match = customerlist.Where(w => w.Key.Equals(item)).ToDictionary(i => i.Key, i => i.Value).FirstOrDefault();
+                        if (!string.IsNullOrEmpty(match.Key))
+                            innerlist.Add(match.Key, match.Value);
                         else
-                            innerlist.Add(subitem, 0);
+                            innerlist.Add(item, 0);
                     }                                
                 }
-                ReturnList.Add(item, innerlist);
+                ReturnList.Add(wareHouse, innerlist);
             }
 
+            collectionCustomer = string.Empty;
             _AllCustomers = null;
             _AllWareHouses = null;
             innerlist = null;

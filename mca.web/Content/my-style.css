@@ -1037,7 +1037,7 @@ border:2px solid #231f20;
 
     .colapse-table-two tbody tr:last-child {
         font-family: 'museo_sans500', Arial, sans-serif !important;
-        font-weight: bold !important;
+        /*font-weight: bold !important;*/
     }
 
 

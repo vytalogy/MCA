@@ -39,6 +39,7 @@ namespace mca.web.Models
         public decimal Transfer { get; set; } = 0;
         public decimal ShippedQuantity { get; set; } = 0;
         public decimal PurhaseOrder { get; set; } = 0;
+        public decimal ProjActQuantity { get; set; } = 0;
     }
 
     #endregion

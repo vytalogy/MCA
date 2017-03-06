@@ -53,6 +53,7 @@
                                     decimal _totalshipped = ((item.Items.Where(w => w.ShippedQuantity < 0).Select(s => s.ShippedQuantity).Sum()) + (item.Items.Where(w => w.ShippedQuantity > 0).Select(s => s.ShippedQuantity).Sum()));
                                     decimal _totalPurhaseOrder = item.Items.Where(w => w.PurhaseOrder > 0).Select(s => s.PurhaseOrder).Sum();
                                     decimal _totalOnHand = item.Items.Where(w => w.QuantityOnHand > 0).Select(s => s.QuantityOnHand).Sum();
+                                    decimal _totalProActQty = ((item.Items.Where(w => w.ProjActQuantity < 0).Select(s => s.ProjActQuantity).Sum()) + (item.Items.Where(w => w.ProjActQuantity > 0).Select(s => s.ProjActQuantity).Sum()));
 
                                     <thead>
                                         <tr>
@@ -98,7 +99,7 @@
                                             <td>-</td>
                                             <td>@_totalPurhaseOrder.VectorValue()</td>
                                             <th>@_totaltransfer.VectorValue()</th>
-                                            <td>236</td>
+                                            <td>@_totalProActQty.VectorValue()</td>
                                             <td>3.01</td>
                                             <th>
                                                 @if (count == 1)
@@ -134,7 +135,7 @@
                                                 <td>
                                                     @subitem.Transfer.VectorValue()
                                                 </td>
-                                                <td>236</td>
+                                                <td>@subitem.ProjActQuantity.VectorValue()</td>
                                                 <td>281</td>
                                             </tr>
                                         }
@@ -145,14 +146,14 @@
                         </div>
                     </div>
                     <div id="myPopover3" class="colapse-table table-marg poptable">
-                            <div class="arrow"></div>
-                            <div class="popover-content">
-                                <div id="loading">
-                                    <img src="~/Images/loading.gif" />
-                                </div>
+                        <div class="arrow"></div>
+                        <div class="popover-content">
+                            <div id="loading">
+                                <img src="~/Images/loading.gif" />
                             </div>
                         </div>
                     </div>
+                </div>
             </div>
         </div>
     </div>
@@ -163,13 +164,13 @@
     <script type="text/javascript">
         $(function () {
 
-        }); 
+        });
         ``
-        $(document).on("click", ".popTbl", function () {           
+        $(document).on("click", ".popTbl", function () {
             var monthYear = $(this).attr("data-Year");
             var customDate = monthYear.split(',');
 
-            var _itemCode = '@Model.ProductId';            
+            var _itemCode = '@Model.ProductId';
             $.ajax({
                 url: '@Url.Action("_GetItemWareHouseDetail", "Products")',
                 data: { itemCode: _itemCode, Month: customDate[0], Year: customDate[1] },

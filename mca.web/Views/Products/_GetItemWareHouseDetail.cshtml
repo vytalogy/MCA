@@ -1,8 +1,8 @@
 ﻿@model Dictionary<string, Dictionary<string, decimal>>
+
 @{
     ViewBag.Title = "_GetItemWareHouseDetail";
 }
-
 
 @if (Model != null && Model.Count > 0)
 { <div class="btn-close">X</div>
@@ -28,7 +28,7 @@
 
                 <tr>
                     <td>@item.Key</td>
-                    
+
                     @foreach (var subitem in item.Value)
                     {
                         <td>
@@ -50,10 +50,9 @@
                             }
                         </td>
                                 }
-                    <td>@Html.Raw(negative + possitve)</td>
+                    <td style="font-weight: bold;">@Html.Raw((negative + possitve).VectorValue())</td>
                 </tr>
                                 }
         </tbody>
     </table>
-
                                 }

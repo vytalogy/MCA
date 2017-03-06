@@ -38,15 +38,11 @@ namespace mca.web.Controllers
         [HttpGet]
         public ActionResult Detail(string productID)
         {
-            //ProductRepository _repository2 = new ProductRepository { };
-            //var Item = _repository2.GetItemWareHouseDetail("MCSDRY1S", "FEB", "2016");
-            //return View();
-
             ProductRepository _repository = new ProductRepository { };
             dynamic _productDetail = _repository.GetItemDetail(productID);
             ProductViewModel model = new ProductViewModel { Items = new List<ProductViewItem> { } };
             model.ProductId = _productDetail.CI_Item;
-            model.Description = !string.IsNullOrEmpty(_productDetail.ItemCodeDesc) ? _productDetail.ItemCodeDesc : "";
+            model.Description = !string.IsNullOrEmpty(_productDetail.ItemCodeDesc) ? _productDetail.ItemCodeDesc : string.Empty;
             model.Brand = !string.IsNullOrEmpty(_productDetail.UDF_BRAND) ? _productDetail.UDF_BRAND : "None";          
             
             var SubItems = _repository.GetItemWareHouse(productID);
@@ -69,6 +65,7 @@ namespace mca.web.Controllers
                     ShippedQuantity = subItem.ShippedQuantity,
                     PurhaseOrder = subItem.PurhaseOrder,
                     QuantityOnHand = subItem.QuantityOnHand,
+                    ProjActQuantity = subItem.ProjActQuantity,
                 }).ToList(),
             }));
 
