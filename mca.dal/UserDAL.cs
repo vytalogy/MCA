@@ -8,17 +8,16 @@ using System.Threading.Tasks;
 using System.Data;
 using Dapper;
 
-
 namespace mca.dal
 {
     public class UserDAL : BaseDAL
     {
-        public List<mca.model.User> GetAll(Boolean? Active = null)
+        public List<mca.model.User> GetAll(string q)
         {
             List<mca.model.User> _User = new List<User> { };
             try
-            {               
-                _User = this._db.Query<User>("UserGetAll", commandType: CommandType.StoredProcedure).ToList();
+            {
+                _User = this._db.Query<User>(@"UserGetAll", new { q = q }, commandType: CommandType.StoredProcedure).ToList();
                 return _User;
             }
             catch(Exception exe) { }
@@ -69,7 +68,7 @@ namespace mca.dal
             catch (Exception exe)
             {
             }
-            return null;
+            return new List<SelectList> { };
         }
        
         public mca.model.User GetByUserId(int? UserId)
@@ -91,13 +90,14 @@ namespace mca.dal
 
             return null;
         }
+
         public bool Create(mca.model.User _User,out string errorMsg)
         {
             errorMsg = string.Empty;                     
             try
             {
                 string query = @"Insert into [User] (FirstName,LastName,Email,Password,NoOfLogin,CreatedBy,CreatedOn,Active)
-                               Values (@FirstName,@LastName,@UserName,@Password,@NoOfLogin,@CreatedBy,@CreatedOn,@Active) SELECT SCOPE_IDENTITY()";
+                               Values (@FirstName,@LastName,@Email,@Password,@NoOfLogin,@CreatedBy,@CreatedOn,@Active) SELECT SCOPE_IDENTITY()";
 
                 int userId = this._db.ExecuteScalar<int>(query, new
                 {
@@ -137,15 +137,17 @@ namespace mca.dal
                 string query = @"Update [User] 
                                 Set FirstName = @FirstName,
                                 LastName = @LastName,
-                                Email = @Email                               
+                                Email = @Email,
+                                Password = @Password                               
                                 where id = @userId";
 
                 this._db.ExecuteScalar<int>(query, new
                 {
                     FirstName = _User.FirstName,
                     LastName = _User.LastName,
-                    Email = _User.Email,                 
-                    UserId = _User.id,
+                    Email = _User.Email,
+                    Password = _User.Password,
+                    UserId = _User.id,                    
                 }, commandType: CommandType.Text);
 
                 query = @"delete from [UserRoles] where UserId=@UserId";
@@ -188,6 +190,44 @@ namespace mca.dal
             }
 
             return true;
+        }
+
+        public bool UserEmailAddress(string email, int? UserId)
+        {
+            try
+            {
+                string query = @"select count(*) from [User] where Email = @Email";
+                if (UserId != null && UserId != 0)
+                {
+                    query += " and id != @id";
+                    int count = this._db.ExecuteScalar<int>(query, new
+                    {
+                        Email = email,
+                        id = UserId,
+
+                    }, commandType: CommandType.Text);
+
+                    if (count > 0)
+                        return true;
+                    else
+                        return false;
+                }
+                else
+                {
+                    int count = this._db.ExecuteScalar<int>(query, new
+                    {
+                        Email = email,
+                    }, commandType: CommandType.Text);
+                    if (count > 0)
+                        return true;
+                    else
+                        return false;
+                }
+            }
+            catch (SqlException ex)
+            {
+                return false;
+            }
         }
     }
 }

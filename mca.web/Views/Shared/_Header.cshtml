@@ -5,7 +5,11 @@
         <div class="container">
             <div class="row">
                 <div class="logoff">
-                    <a href="@Url.Action("Logout", "Account")"><i class="fa fa-power-off" aria-hidden="true" title="@(Auth.RoleName + " - " + Auth.Email)">&nbsp; Log Off</i></a>
+                    <i class="fa" aria-hidden="true"> @(Auth.FirstName + " " + Auth.LastName)</i>
+                    <i> | </i>
+                    <a href="@Url.Action("Logout", "Account")">
+                        <i class="fa fa-power-off" aria-hidden="true" title="@(Auth.RoleName)">&nbsp; Log Off</i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -31,7 +35,10 @@
                     <li><a href="@Url.Action("Home", "Products")">Home</a></li>
                     <li><a href="@Url.Action("Search", "Products")">Product Search</a></li>
                     <li><a href="@Url.Action("Selector", "Products")">Product Selector</a></li>
-                    <li><a href="@Url.Action("Forecasting", "Products")">Forecasting</a></li>
+                    @if (Auth.RoleName == "WebAdmin" || Auth.RoleName == "Admin")
+                    {
+                        <li><a href="@Url.Action("Forecasting", "Products")">Forecasting</a></li>
+                    }
                     <li><a href="@Url.Action("Analytics", "Products")">Analytics</a></li>
                 </ul>
             </div>

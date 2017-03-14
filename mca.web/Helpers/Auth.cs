@@ -62,5 +62,22 @@ namespace mca.web.Helpers
                 return HttpContext.Current.Session["Active"].ConvertToBool();
             }
         }
+
+        public static string FirstName
+        {
+            get
+            {
+                return HttpContext.Current.Session["FirstName"].ConvertToString();
+            }
+        }
+
+
+        public static string LastName
+        {
+            get
+            {
+                return HttpContext.Current.Session["LastName"].ConvertToString();
+            }
+        }
     }
 }

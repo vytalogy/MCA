@@ -24,20 +24,27 @@ namespace mca.web.Models
     public class RegistorViewModel
     {
         public int id { set; get; }
-        [Required]
+
+        [Required(ErrorMessage = "The first name is required.")]
         public string FirstName { set; get; }
-        [Required]
+
+        [Required(ErrorMessage = "The last name is required.")]
         public string LastName { set; get; }
-        [Required]
+
+        [Required(ErrorMessage = "The email is required.")]
         [EmailAddress]
+        [Remote("CheckExistingEmail","Account",AdditionalFields ="id", ErrorMessage = "Email already exists!")]
         public string Email { set; get; }
-        [Required]
+
+        [StringLength(20, MinimumLength = 10, ErrorMessage = "Password at least 10 alphabets")]
+        [Required(ErrorMessage = "The password is required.")]
         public string Password { set; get; }
+
         [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "Confirm password doesn't match, Type again !")]
         public string ConfirmPassword { set; get; }
-        [Required]
-        public int RoleID { set; get; }
-        public List<SelectListItem> RolesList { set; get; }
+
+        [Required(ErrorMessage = "The role is required.")]
+        public int RoleID { set; get; }       
     }
 
     #endregion

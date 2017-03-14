@@ -9,6 +9,7 @@
     @Scripts.Render("~/bundles/modernizr")
     @Styles.Render("~/Content/CustomStyle")
     @Styles.Render("~/Content/jqueryui")
+    
     @RenderSection("Styles", required: false)
 </head>
 <body>
@@ -23,9 +24,12 @@
     @{Html.RenderPartial("_Footer");}
 
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/unobtrusive")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/jqueryui")
-    @Scripts.Render("~/bundles/custom")
+    @Scripts.Render("~/bundles/custom")   
+
     @RenderSection("scripts", required: false)
 </body>
 </html>

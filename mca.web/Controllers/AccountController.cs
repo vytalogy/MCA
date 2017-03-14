@@ -29,9 +29,12 @@ namespace mca.web.Controllers
        
         [Restricted]
         [HttpGet]
-        public ActionResult Index()
+        public ActionResult Index(string q)
         {
-            var query = _userDal.GetAll();
+            TempData["alert"] = TempData["alert"] == null ? string.Empty : TempData["alert"];
+            TempData["msg"] = TempData["msg"] == null ? string.Empty : TempData["msg"];
+            var query = _userDal.GetAll(q);
+            ViewBag.qurey = !string.IsNullOrEmpty(q) ? q : string.Empty;
             return View(query);
         }
        
@@ -49,7 +52,7 @@ namespace mca.web.Controllers
             if (ModelState.IsValid)
             {                
                 model.Email = model.Email.TrimStartEnd();
-                model.Password = model.Password.TrimStartEnd();               
+                model.Password = model.Password.TrimStartEnd().EncryptData();               
                 var q = _userDal.Get(model.Email, model.Password,out errorMsg);
                 if (q != null)
                 {
@@ -58,6 +61,8 @@ namespace mca.web.Controllers
                     System.Web.HttpContext.Current.Session["Email"] = q.Email;
                     System.Web.HttpContext.Current.Session["IsActive"] = q.Active ? "true" : "false";
                     System.Web.HttpContext.Current.Session["RoleName"] = q.RoleName;
+                    System.Web.HttpContext.Current.Session["FirstName"] = q.FirstName;
+                    System.Web.HttpContext.Current.Session["LastName"] = q.LastName;
 
                     return RedirectToAction("Home", "Products");
                 }
@@ -74,15 +79,8 @@ namespace mca.web.Controllers
         [Restricted]
         [HttpGet]        
         public ActionResult Create()
-        {
-            RegistorViewModel model = new RegistorViewModel { RolesList = new List<SelectListItem> { } };
-            model.RolesList = new List<SelectListItem> { };
-            model.RolesList = _userDal.GetRoles().Select(item => new SelectListItem
-            {
-                 Text = item.Text,
-                 Value = item.Value,
-            }).ToList();
-            return View(model);
+        {         
+            return View();
         }
         
         [Restricted]
@@ -99,24 +97,21 @@ namespace mca.web.Controllers
                     LastName = model.LastName,
                     Email = model.Email,
                     CreatedBy = Auth.UserID,
-                    Password = model.Password,
+                    Password = model.Password.EncryptData(),
                     RoleID = model.RoleID,
                 };
                 bool isSuccess = _userDal.Create(_user, out errorMsg);
                 if (isSuccess)
                 {
                     TempData["alert"] = "success";
+                    TempData["msg"] = "Record saved successfully.";
                     return RedirectToAction("Index", "Account");
                 }
                 else
-                { TempData["alert"] = "error"; }
+                { TempData["alert"] = "error";
+                    TempData["msg"] = "Record not saved successfully.";
+                }
             }
-
-            model.RolesList = _userDal.GetRoles().Select(item => new SelectListItem
-            {
-                Text = item.Text,
-                Value = item.Value,
-            }).ToList();
 
             return View(model);
         }
@@ -144,13 +139,9 @@ namespace mca.web.Controllers
                 LastName = _data.LastName,
                 Email = _data.Email,
                 RoleID = _data.RoleID,
+                Password = _data.Password.DecryptData(),
             };
-
-            model.RolesList = _userDal.GetRoles().Select(item => new SelectListItem
-            {
-                Text = item.Text,
-                Value = item.Value,
-            }).ToList();
+           
             return View(model);
         }
 
@@ -169,24 +160,23 @@ namespace mca.web.Controllers
                     id = model.id,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
-                    Email = model.Email,                   
+                    Email = model.Email,
+                    Password = model.Password.EncryptData(),
                     RoleID = model.RoleID,
                 };
                 bool isSuccess = _userDal.Update(_user, out errorMsg);
                 if (isSuccess)
                 {
                     TempData["alert"] = "success";
+                    TempData["msg"] = "Record saved successfully.";
                     return RedirectToAction("Index", "Account");
                 }
                 else
-                { TempData["alert"] = "error"; }
+                {
+                    TempData["alert"] = "error";
+                    TempData["msg"] = "Record not saved successfully.";
+                }
             }
-
-            model.RolesList = _userDal.GetRoles().Select(item => new SelectListItem
-            {
-                Text = item.Text,
-                Value = item.Value,
-            }).ToList();
             return View(model);
         }
 
@@ -197,6 +187,7 @@ namespace mca.web.Controllers
             { return HttpNotFound(); }
             _userDal.Delete(id); 
             TempData["alert"] = "success";
+            TempData["msg"] = "Record deleted successfully.";
             return RedirectToAction("Index", "Account");
         }
 
@@ -216,6 +207,21 @@ namespace mca.web.Controllers
             Response.Cache.SetNoStore();
             
             return RedirectToAction("Login", "Account");
+        }
+
+        public ActionResult CheckExistingEmail(string Email,int? id)
+        {
+            bool ifEmailExist = false;
+            try
+            {
+                ifEmailExist = _userDal.UserEmailAddress(Email,id) ? true : false;
+                return Json(!ifEmailExist, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+            }
+
         }
     }
 }

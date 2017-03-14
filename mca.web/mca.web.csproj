@@ -283,6 +283,7 @@
     <Content Include="Images\product-name-icon.png" />
     <Content Include="Images\product-selector-icon.png" />
     <Content Include="Images\search-icon-small.png" />
+    <Content Include="Images\searchicon.png" />
     <Content Include="Images\un-checked.png" />
     <Content Include="Scripts\bootstrap-popover-x.js" />
     <Content Include="Scripts\bootstrap.js" />

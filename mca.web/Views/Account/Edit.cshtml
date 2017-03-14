@@ -20,11 +20,11 @@
     <div class="container-fluid">
         <div class="container container-bg page-height">
             <div class="row">
-                <div class="registraion-form">
+                <div class="registraion-form">@Html.ValidationSummary()
                     <section class="content-r bgcolor-6">
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <span class="input input--ruri">
-                                @Html.TextBoxFor(m => m.FirstName, new { @class = "input__field input__field--ruri" })                              
+                                @Html.TextBoxFor(m => m.FirstName, new { @class = "input__field input__field--ruri", @maxlength = "20" })
                                 <label class="input__label input__label--ruri" for="input-26">
                                     <span class="input__label-content input__label-content--ruri">First Name</span>
                                 </label>
@@ -32,7 +32,7 @@
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <span class="input input--ruri">
-                                @Html.TextBoxFor(m => m.LastName, new { @class = "input__field input__field--ruri" })
+                                @Html.TextBoxFor(m => m.LastName, new { @class = "input__field input__field--ruri", @maxlength = "20" })
                                 <label class="input__label input__label--ruri" for="input-26">
                                     <span class="input__label-content input__label-content--ruri">Last Name</span>
                                 </label>
@@ -40,7 +40,7 @@
                         </div>
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <span class="input input--ruri">
-                                @Html.TextBoxFor(m => m.Email, new { @class = "input__field input__field--ruri" })                                
+                                @Html.TextBoxFor(m => m.Email, new { @class = "input__field input__field--ruri", @maxlength = "20" })
                                 <label class="input__label input__label--ruri" for="input-26">
                                     <span class="input__label-content input__label-content--ruri">Email</span>
                                 </label>
@@ -49,7 +49,8 @@
 
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <span class="input input--ruri">
-                                @Html.TextBoxFor(m => m.Password, new { @class = "input__field input__field--ruri" })                                
+                                @Html.PasswordFor(m => m.Password, new { @class = "input__field input__field--ruri", @maxlength = "20" })
+
                                 <label class="input__label input__label--ruri" for="input-26">
                                     <span class="input__label-content input__label-content--ruri">Password</span>
                                 </label>
@@ -58,7 +59,7 @@
 
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <span class="input input--ruri">
-                                @Html.TextBoxFor(m => m.ConfirmPassword, new { @class = "input__field input__field--ruri" })                               
+                                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "input__field input__field--ruri", @maxlength = "20" })
                                 <label class="input__label input__label--ruri" for="input-26">
                                     <span class="input__label-content input__label-content--ruri">Confirm Password</span>
                                 </label>
@@ -71,13 +72,13 @@
                                     <label>Role</label>
                                 </div>
                                 <label class="radio-inline">
-                                    <input type="radio" name="optradio">Web Admin
+                                    @Html.RadioButtonFor(m => m.RoleID, "3")Web Admin
                                 </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="optradio">Admin
+                                    @Html.RadioButtonFor(m => m.RoleID, "2")Admin
                                 </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="optradio">Standard User
+                                    @Html.RadioButtonFor(m => m.RoleID, "1")Standard User
                                 </label>
                             </form>
                         </div>
@@ -85,7 +86,7 @@
                     </section>
 
                     <div class="button">
-                        <button type="submit" class="button">Submit</button>
+                        <button type="submit" class="button">Update</button>
                     </div>
 
                 </div>
@@ -216,5 +217,17 @@ if ( typeof define === 'function' && define.amd ) {
 					}
 				}
 			})();
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#Password").val(@Model.Password);
+            $("#ConfirmPassword").val(@Model.Password);
+            //$('#Password').trigger('click');
+
+            $("#Password").focus();
+            $("#ConfirmPassword").focus();
+            $("#FirstName").focus();
+        });
     </script>
 }
