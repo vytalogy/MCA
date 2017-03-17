@@ -92,8 +92,6 @@
                                                     <div class="tbl-btn">More</div>
                                                     <div class="adge-bottom"></div>
                                                 </button>
-
-                                                @*<button class="btn btn-primary popTbl" data-target="#myPopover3" data-Year="@item.MonthYear">More</button>*@
                                             </td>
                                             <td>@_totalshipped.VectorValue()</td>
                                             <td>-</td>
@@ -162,10 +160,11 @@
 @section Scripts
 {
     <script type="text/javascript">
+
         $(function () {
 
         });
-        ``
+       
         $(document).on("click", ".popTbl", function () {
             var monthYear = $(this).attr("data-Year");
             var customDate = monthYear.split(',');
@@ -180,8 +179,7 @@
                     $(".popover-content").empty().html(data);
                 }
             });
-
-
         });
+
     </script>
 }
