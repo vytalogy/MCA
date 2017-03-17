@@ -26,7 +26,8 @@ namespace mca.web.Controllers
         }
 
         #endregion
-       
+
+        [OutputCache(Duration = 90, VaryByParam = "q")]
         [Restricted]
         [HttpGet]
         public ActionResult Index(string q)
@@ -40,9 +41,8 @@ namespace mca.web.Controllers
        
         [HttpGet]       
         public ActionResult Login()
-        {
-            LoginViewModel login = new LoginViewModel { };
-            return View(login);
+        {            
+            return View(new LoginViewModel { });
         }
 
         [HttpPost]
@@ -62,8 +62,7 @@ namespace mca.web.Controllers
                     System.Web.HttpContext.Current.Session["IsActive"] = q.Active ? "true" : "false";
                     System.Web.HttpContext.Current.Session["RoleName"] = q.RoleName;
                     System.Web.HttpContext.Current.Session["FirstName"] = q.FirstName;
-                    System.Web.HttpContext.Current.Session["LastName"] = q.LastName;
-
+                    System.Web.HttpContext.Current.Session["LastName"] = q.LastName;                               
                     return RedirectToAction("Home", "Products");
                 }
                 else
@@ -121,18 +120,13 @@ namespace mca.web.Controllers
         [HttpGet]
         public ActionResult Edit(int? id)
         {
-            if (id == null) {
-                return HttpNotFound();
-            }
-
+            if (id == null) 
+                return HttpNotFound();            
 
             var _data = _userDal.GetByUserId(id);
-            if (_data == null)
-            {
-                return HttpNotFound();
-            }
-
-
+            if (_data == null)            
+                return HttpNotFound();           
+            
             RegistorViewModel model = new RegistorViewModel
             {
                 FirstName = _data.FirstName,
@@ -181,14 +175,28 @@ namespace mca.web.Controllers
         }
 
         [HttpGet]
-        public ActionResult Delete(int? id)
+        public JsonResult Delete(int? id)
         {
-            if (id == null)
-            { return HttpNotFound(); }
-            _userDal.Delete(id); 
-            TempData["alert"] = "success";
-            TempData["msg"] = "Record deleted successfully.";
-            return RedirectToAction("Index", "Account");
+            if (id == Auth.UserID)
+            {
+                TempData["alert"] = "error";
+                TempData["msg"] = "Please login with another user then try again.";
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+
+            bool isSuccess = _userDal.Delete(id);
+            if (isSuccess)
+            {
+                TempData["alert"] = "success";
+                TempData["msg"] = "Record deleted successfully.";
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                TempData["alert"] = "error";
+                TempData["msg"] = "Please try again, record is not deleted.";
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
         }
 
         [HttpGet]
@@ -209,6 +217,7 @@ namespace mca.web.Controllers
             return RedirectToAction("Login", "Account");
         }
 
+        [HttpGet]
         public ActionResult CheckExistingEmail(string Email,int? id)
         {
             bool ifEmailExist = false;

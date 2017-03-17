@@ -67,17 +67,17 @@ namespace mca.providex
             string enddate = string.Format("{0:yyyy-MM}", DateTime.Now.AddMonths(+13)) + "-" + lastdayofmonth;
 
             string query = @"SELECT YEAR = YEAR(TRANSACTIONDATE), MONTH = MONTH(TRANSACTIONDATE), MMM = UPPER(LEFT(DATENAME(MONTH, TRANSACTIONDATE), 3))
-                                FROM IM_ITEMTRANSACTIONHISTORY WHERE ITEMCODE = @filter AND (TRANSACTIONDATE >= @startdate AND TRANSACTIONDATE <= @enddate)
-                                and WarehouseCode not in  ('FR', '0000', 'CHN', 'DCH','USA') and CustomerNo is not null and TransactionCode='so'
+                                FROM IM_ITEMTRANSACTIONHISTORY WHERE ITEMCODE = @filter AND (TRANSACTIONDATE between @startdate AND @enddate)
+                                and WarehouseCode not in ('FR', '0000', 'CHN', 'DCH','USA') and CustomerNo is not null and TransactionCode='so'
                                 GROUP BY YEAR(TRANSACTIONDATE), MONTH(TRANSACTIONDATE), DATENAME(MONTH, TRANSACTIONDATE)
                                 ORDER BY YEAR ASC, MONTH ASC";
-            List<dynamic> _data = this._db.Query<dynamic>(query, new
+            IQueryable<dynamic> _data = this._db.Query<dynamic>(query, new
             {
                 filter = filter,
                 startdate = startdate,
                 enddate = enddate
 
-            }).ToList();
+            }).AsQueryable<dynamic>();
             foreach (var item in _data)
             {
                 lastdayofmonth = DateTime.DaysInMonth(int.Parse(item.YEAR.ToString()), int.Parse(item.MONTH.ToString()));
@@ -90,13 +90,14 @@ namespace mca.providex
                     Items = new List<ProductDataLineItem> { }
                 };
                 List<string> WarehouseCode = new List<string> { };
+
                 #region Top 3 Customers
 
-                string TopCustomerquery = @"select WarehouseCode,customerno,'TopQty' = sum(HISTORY.TransactionQty) from IM_ITEMTRANSACTIONHISTORY HISTORY 
-                               where HISTORY.itemcode =  @filter and HISTORY.TransactionCode = 'so'
-                               and (HISTORY.TransactionDate >= @startdate and HISTORY.TransactionDate <= @enddate)
-                               and WarehouseCode not in  ('FR', '0000', 'CHN', 'DCH','USA') and HISTORY.CustomerNo is not null
-                               group by HISTORY.WarehouseCode, HISTORY.customerno order by sum(HISTORY.TransactionQty)";
+                string TopCustomerquery = @"select WarehouseCode, customerno,'TopQty' = sum(HISTORY.TransactionQty) from IM_ITEMTRANSACTIONHISTORY HISTORY 
+                                            where HISTORY.itemcode = @filter and HISTORY.TransactionCode = 'so'
+                                            and (HISTORY.TransactionDate between @startdate and @enddate)
+                                            and WarehouseCode not in ('FR', '0000', 'CHN', 'DCH','USA') and HISTORY.CustomerNo is not null
+                                            GROUP BY HISTORY.WarehouseCode, HISTORY.customerno ORDER BY sum(HISTORY.TransactionQty)";
 
                 dynamic TopCustomer = this._db.Query<dynamic>(TopCustomerquery, new
                 {
@@ -141,45 +142,46 @@ namespace mca.providex
                 #endregion
 
                 #region Detail line Item
-                
+
+                string subquery = string.Empty;
                 foreach (var subitem in WarehouseCode)
                 {
                     ProductDataLineItem detail = new ProductDataLineItem { QuantityOnHand = 0 };
                     detail.WarehouseCode = subitem;
 
-                    string subquery = @"SELECT 
+                    subquery = @"SELECT 
                                       (SELECT SUM(TransactionQty) FROM IM_ITEMTRANSACTIONHISTORY
                                       WHERE ItemCode = @filter and TransactionCode='so'
-		                              and (TransactionDate >= @startdate and TransactionDate <= @enddate)
-		                              and WarehouseCode not in ('FR', '0000', 'CHN', 'DCH','USA') 
-                                      and WarehouseCode = @WarehouseCode and CustomerNo = @TopCustomer1) Customer1Qty,
+		                              and (TransactionDate between @startdate and @enddate)		                               
+                                      and WarehouseCode = @WarehouseCode and CustomerNo = @TopCustomer1
+                                      GROUP BY TransactionCode) Customer1Qty,
 
                                       (SELECT SUM(TransactionQty) FROM IM_ITEMTRANSACTIONHISTORY
                                       WHERE ItemCode = @filter and TransactionCode='so'
-		                              and (TransactionDate >= @startdate and TransactionDate <= @enddate)
-		                              and WarehouseCode not in ('FR', '0000', 'CHN', 'DCH','USA') 
-                                      and WarehouseCode = @WarehouseCode and CustomerNo = @TopCustomer2) Customer2Qty,
+		                              and (TransactionDate between @startdate and @enddate)		                              
+                                      and WarehouseCode = @WarehouseCode and CustomerNo = @TopCustomer2
+                                      GROUP BY TransactionCode) Customer2Qty,
 
                                       (SELECT SUM(TransactionQty) FROM IM_ITEMTRANSACTIONHISTORY
                                       WHERE ItemCode = @filter and TransactionCode='so'
-		                              and (TransactionDate >= @startdate and TransactionDate <= @enddate)
-		                              and WarehouseCode not in ('FR', '0000', 'CHN', 'DCH','USA') 
-                                      and WarehouseCode = @WarehouseCode and CustomerNo = @TopCustomer3) Customer3Qty,
+		                              and (TransactionDate between @startdate and @enddate)
+                                      and WarehouseCode = @WarehouseCode and CustomerNo = @TopCustomer3
+                                      GROUP BY TransactionCode) Customer3Qty,
 
                                       (SELECT SUM(TransactionQty) FROM IM_ITEMTRANSACTIONHISTORY
                                       WHERE ItemCode = @filter and TransactionCode='so'
-		                              and (TransactionDate >= @startdate and TransactionDate <= @enddate)
-		                              and WarehouseCode not in ('FR', '0000', 'CHN', 'DCH','USA') and WarehouseCode = @WarehouseCode) ShippedQty,
+		                              and (TransactionDate between @startdate and @enddate)
+		                              and WarehouseCode = @WarehouseCode GROUP BY WarehouseCode) ShippedQty,
 
                                       (SELECT SUM(TransactionQty) FROM IM_ITEMTRANSACTIONHISTORY
                                       WHERE ItemCode = @filter and TransactionCode='po'
-		                              and (TransactionDate >= @startdate and TransactionDate <= @enddate)
-                              		  and WarehouseCode not in ('FR', '0000', 'CHN', 'DCH','USA') and WarehouseCode = @WarehouseCode) OnOrderQty,
+		                              and (TransactionDate between @startdate and @enddate)
+                              		  and WarehouseCode = @WarehouseCode GROUP BY WarehouseCode) OnOrderQty,
 
 		                              (SELECT SUM(TransactionQty) FROM IM_ITEMTRANSACTIONHISTORY
                                       WHERE ItemCode = @filter and TransactionCode='it'
-		                              and (TransactionDate >= @startdate and TransactionDate <= @enddate)
-		                              and WarehouseCode not in ('FR', '0000', 'CHN', 'DCH','USA') and WarehouseCode = @WarehouseCode) TransferQty";
+		                              and (TransactionDate between @startdate and @enddate)
+		                              and WarehouseCode = @WarehouseCode GROUP BY WarehouseCode) TransferQty";
 
                     dynamic _subData = this._db.Query<dynamic>(subquery, new
                     {
@@ -224,13 +226,13 @@ namespace mca.providex
                         else
                             detail.Transfer = 0;
 
-
                         detail.ProjActQuantity = ((detail.ShippedQuantity + detail.Transfer) + detail.PurhaseOrder);
                     }
-                    
+
                     _ProductItem.Items.Add(detail);
                     detail = null;
                     _subData = null;
+                    subquery = string.Empty;
                 }
 
                 WarehouseCode = null;
@@ -259,7 +261,7 @@ namespace mca.providex
             #region Group Data
 
             string query = @"select WarehouseCode, customerno from IM_ITEMTRANSACTIONHISTORY HISTORY where HISTORY.itemcode = @filter
-                             and HISTORY.TransactionCode = 'so' and(HISTORY.TransactionDate >= @startdate and HISTORY.TransactionDate <= @enddate)
+                             and HISTORY.TransactionCode = 'so' and(HISTORY.TransactionDate between @startdate and @enddate)
                              and WarehouseCode not in  ('FR', '0000', 'CHN', 'DCH','USA')
                              group by WarehouseCode,customerno";
 
@@ -293,7 +295,7 @@ namespace mca.providex
             {
                 innerlist = new Dictionary<string, decimal> { };
                 query = @"select customerno,'SalesOrder' = sum(HISTORY.TransactionQty) from IM_ITEMTRANSACTIONHISTORY HISTORY where HISTORY.itemcode = @filter
-                          and HISTORY.TransactionCode='so' and (HISTORY.TransactionDate >= @startdate and HISTORY.TransactionDate <= @enddate)
+                          and HISTORY.TransactionCode='so' and (HISTORY.TransactionDate between @startdate and @enddate)
                           and WarehouseCode not in  ('FR', '0000', 'CHN', 'DCH','USA') and WarehouseCode = @WarehouseCode
                           and customerno in (" + collectionCustomer + ") group by customerno";
                 var customerlist = this._db.Query(query, new

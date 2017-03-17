@@ -14,6 +14,32 @@ namespace mca.web.Controllers
     [Restricted]
     public class ProductsController : Controller
     {
+        #region Lazy Object Initializer
+
+        private Lazy<ProductRepository> repository = new Lazy<ProductRepository>(() =>
+        {
+            var cache = new ProductRepository { };
+            return cache;
+        });
+
+        public ProductRepository _ProductRepo
+        {
+            get { return repository.Value; }
+        }
+
+        private Lazy<ProdcutDAL> productDAL = new Lazy<ProdcutDAL>(() =>
+        {
+            var cache = new ProdcutDAL { };
+            return cache;
+        });
+
+        public ProdcutDAL _ProductDAL
+        {
+            get { return productDAL.Value; }
+        }
+
+        #endregion
+
         [OutputCache(Duration = 30, VaryByParam = "none")]
         [HttpGet]
         public ActionResult Home()
@@ -34,18 +60,18 @@ namespace mca.web.Controllers
         {
             return View();
         }
-                
+
+        [OutputCache(Duration = 90, VaryByParam = "productID")]
         [HttpGet]
         public ActionResult Detail(string productID)
-        {
-            ProductRepository _repository = new ProductRepository { };
-            dynamic _productDetail = _repository.GetItemDetail(productID);
+        {            
+            dynamic _productDetail = _ProductRepo.GetItemDetail(productID);
             ProductViewModel model = new ProductViewModel { Items = new List<ProductViewItem> { } };
             model.ProductId = _productDetail.CI_Item;
             model.Description = !string.IsNullOrEmpty(_productDetail.ItemCodeDesc) ? _productDetail.ItemCodeDesc : string.Empty;
             model.Brand = !string.IsNullOrEmpty(_productDetail.UDF_BRAND) ? _productDetail.UDF_BRAND : "None";          
             
-            var SubItems = _repository.GetItemWareHouse(productID);
+            var SubItems = _ProductRepo.GetItemWareHouse(productID);
             model.Items.AddRange(SubItems.Items.Select(item => new ProductViewItem
             {
                 MonthYear = item.MonthYear,
@@ -77,12 +103,11 @@ namespace mca.web.Controllers
         [HttpGet]
         public ActionResult Forecasting(string productID)
         {
-            TempData["alert"] = "Oop";
-            ProductRepository _product = new ProductRepository { };
+            TempData["alert"] = "Oop";           
             ProductForcastingModel model = new ProductForcastingModel { isDataFound = false };
             if (!string.IsNullOrEmpty(productID))
             {
-                dynamic _productDetail = _product.GetItemDetail(productID);
+                dynamic _productDetail = _ProductRepo.GetItemDetail(productID);
                 model = new ProductForcastingModel { };
                 model.ProductId = _productDetail.CI_Item;
                 model.Description = !string.IsNullOrEmpty(_productDetail.ItemCodeDesc) ? _productDetail.ItemCodeDesc : "";
@@ -126,11 +151,10 @@ namespace mca.web.Controllers
                 }));
             }
 
-            mca.dal.ProdcutDAL _product = new mca.dal.ProdcutDAL { };
-            var isSuccess = _product.AddProduct(model);
+            var isSuccess = _ProductDAL.AddProduct(model);
             if (string.IsNullOrEmpty(isSuccess.Item2))
             {
-                _product.AddForecasting(model.List, isSuccess.Item1);
+                _ProductDAL.AddForecasting(model.List, isSuccess.Item1);
                 TempData["alert"] = "success";
             }
             else { TempData["alert"] = "error"; TempData["msg"] = isSuccess.Item2; }
@@ -149,9 +173,8 @@ namespace mca.web.Controllers
         {
             if (string.IsNullOrEmpty(Prefix))
                 return null;
-
-            ProductRepository _product = new ProductRepository { };
-            var Item = _product.GetItemByFilter(Prefix, CustomEnum.SearchByItemCode).Select(s => new
+            
+            var Item = _ProductRepo.GetItemByFilter(Prefix, CustomEnum.SearchByItemCode).Select(s => new
             {
                 Name = s[1].ConvertToString(),
                 Id = s[0].ConvertToString()
@@ -164,8 +187,7 @@ namespace mca.web.Controllers
         public PartialViewResult _ProductFilter(string filter, string Header)
         {
             ViewBag.Header = Header;
-            ProductRepository _product = new ProductRepository();
-            var Item = _product.GetItemByFilter(filter, CustomEnum.SearchByItemCodeDesc).Select(s => new SelectListItem
+            var Item = _ProductRepo.GetItemByFilter(filter, CustomEnum.SearchByItemCodeDesc).Select(s => new SelectListItem
             {
                 Text = s[1].ConvertToString(),
                 Value = s[0].ConvertToString()
@@ -178,8 +200,7 @@ namespace mca.web.Controllers
         [HttpGet]
         public PartialViewResult _GetItemWareHouseDetail(string itemCode, string Month, string Year)
         {
-            ProductRepository _repository = new ProductRepository { };
-            var Item = _repository.GetItemWareHouseDetail(itemCode, Month,Year);
+            var Item = _ProductRepo.GetItemWareHouseDetail(itemCode, Month,Year);
             return PartialView(Item);
         }
     }

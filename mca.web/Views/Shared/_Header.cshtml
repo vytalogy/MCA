@@ -40,6 +40,10 @@
                         <li><a href="@Url.Action("Forecasting", "Products")">Forecasting</a></li>
                     }
                     <li><a href="@Url.Action("Analytics", "Products")">Analytics</a></li>
+                    @if (Auth.RoleName == "WebAdmin")
+                    {
+                        <li><a href="@Url.Action("Index", "Account")">Users</a></li>
+                    }
                 </ul>
             </div>
         }
